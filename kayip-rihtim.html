@@ -1,0 +1,1249 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kayıp Rıhtım</title>
+<style>
+:root {
+  --paper: #f6f0e4;
+  --surface: #fbf7ef;
+  --ink: #302c27;
+  --muted: #706657;
+  --accent: #79382f;
+  --line: #d9cebd;
+  --soft: #eae1d2;
+  --green: #4c5e4e;
+  --size: 21px;
+}
+
+html[data-theme="day"] {
+  --paper: #fafafa;
+  --surface: #fff;
+  --ink: #282b2b;
+  --muted: #616666;
+  --accent: #783b35;
+  --line: #dcdedd;
+  --soft: #edf0ed;
+  --green: #405c49;
+}
+
+html[data-theme="night"] {
+  --paper: #202321;
+  --surface: #272b28;
+  --ink: #eee7da;
+  --muted: #b9b5aa;
+  --accent: #e4aa96;
+  --line: #4a5049;
+  --soft: #343a34;
+  --green: #b5c8ae;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+a { color: inherit; text-decoration: none; }
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: .4;
+  cursor: default;
+}
+
+[hidden] { display: none !important; }
+
+.kapsayici {
+  max-width: 1180px;
+  margin: auto;
+  padding: 0 48px;
+}
+
+.ust-serit { border-bottom: 1px solid var(--line); }
+
+.ust-serit-ici {
+  min-height: 98px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.marka-adi {
+  display: block;
+  font: 26px Georgia, serif;
+  letter-spacing: -.6px;
+}
+
+.marka-aciklamasi {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 5px;
+}
+
+.tema-grubu {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 40px;
+}
+
+.tema-dugmesi {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  border-radius: 30px;
+  padding: 9px 13px;
+  font-size: 12px;
+}
+
+.tema-dugmesi[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.tema-noktasi {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+}
+
+.tema-dugmesi[data-value="day"] .tema-noktasi { background: #fff; }
+.tema-dugmesi[data-value="sepia"] .tema-noktasi { background: #ceb38b; }
+.tema-dugmesi[data-value="night"] .tema-noktasi { background: #515f55; }
+
+.giris { padding: 70px 0 55px; }
+
+.giris h1 {
+  font: normal clamp(56px, 6.8vw, 86px)/1.04 Georgia, serif;
+  letter-spacing: -3px;
+  margin: 25px 0;
+}
+
+.giris h1 em {
+  font-weight: normal;
+  color: var(--accent);
+}
+
+.giris-metni {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--muted);
+  max-width: 430px;
+  margin: 22px 0 0;
+}
+
+.masal-listesi {
+  border-top: 1px solid var(--ink);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 40px;
+}
+
+.masal-karti {
+  display: grid;
+  grid-template-columns: 35px 1fr;
+  gap: 16px;
+  padding: 30px 12px 31px 0;
+  border-bottom: 1px solid var(--line);
+  min-height: 201px;
+  transition: background .18s, box-shadow .18s, transform .18s;
+}
+
+.masal-karti:hover {
+  background: var(--surface);
+  box-shadow: 0 9px 20px -17px var(--ink);
+  transform: translateY(-2px);
+}
+
+.kart-numarasi {
+  font: italic 15px Georgia, serif;
+  color: var(--muted);
+  padding-top: 5px;
+}
+
+.kart-temasi {
+  font-size: 9px;
+  letter-spacing: 1.4px;
+  color: var(--green);
+  text-transform: uppercase;
+}
+
+.masal-karti h3 {
+  font: normal 29px/1.18 Georgia, serif;
+  letter-spacing: -.7px;
+  margin: 10px 0;
+}
+
+.kart-aciklamasi {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--muted);
+  max-width: 340px;
+  margin: 0;
+}
+
+.kart-oku {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 17px;
+  color: var(--accent);
+}
+
+.secki-sonu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  padding: 35px 0 65px;
+}
+
+.secki-sonu p {
+  font: italic 18px Georgia, serif;
+  margin: 0;
+}
+
+.secki-sonu span {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.okuma-ust-alani {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.geri-baglantisi {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.geri-baglantisi:hover { color: var(--accent); }
+
+.masal-sirasi {
+  font-size: 10px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.okuma-ayarlari {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 11px;
+  padding-top: 28px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.boyut-kontrolleri {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.boyut-dugmesi {
+  width: 37px;
+  height: 35px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: transparent;
+}
+
+.boyut-dugmesi:hover:enabled { background: var(--soft); }
+
+.boyut-dugmesi.buyuk { font-size: 17px; }
+
+.okuma-ayarlari output {
+  min-width: 42px;
+  text-align: center;
+}
+
+.okuma-alani {
+  max-width: 740px;
+  margin: 0 auto;
+  padding: 45px 0 65px;
+}
+
+.masal-baslik-alani {
+  text-align: center;
+  margin-bottom: 42px;
+}
+
+.ust-baslik {
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.masal-baslik-alani h1 {
+  font: normal clamp(40px, 5vw, 60px)/1.1 Georgia, serif;
+  letter-spacing: -1.6px;
+  margin: 19px 0;
+}
+
+.masal-giris-metni {
+  font: italic 19px/1.6 Georgia, serif;
+  max-width: 570px;
+  margin: 0 auto;
+  color: var(--muted);
+}
+
+.kisa-cizgi {
+  width: 45px;
+  border: 0;
+  border-top: 1px solid var(--accent);
+  margin: 28px auto 18px;
+}
+
+.masal-metni {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: var(--size);
+  line-height: 1.72;
+  overflow-wrap: break-word;
+  display: flow-root;
+}
+
+.masal-metni p { margin: 0 0 1.3em; }
+
+.masal-metni p:first-child::first-letter {
+  float: left;
+  font-size: 3.3em;
+  line-height: .85;
+  margin: .08em .12em 0 0;
+  color: var(--accent);
+}
+
+.masal-sonu {
+  text-align: center;
+  font-size: 20px;
+  color: var(--accent);
+  margin: 27px 0;
+}
+
+.kaynak-bilgisi {
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+  font-size: 11px;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+.kaynak-bilgisi summary {
+  cursor: pointer;
+  color: var(--ink);
+  padding: 6px 0;
+}
+
+.kaynak-bilgisi a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.kaynak-bilgisi p { margin: 12px 0; }
+
+.masal-gezinme {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  border-top: 1px solid var(--line);
+  margin-top: 30px;
+  padding-top: 24px;
+}
+
+.masal-gezinme a {
+  max-width: 46%;
+  font: 17px/1.4 Georgia, serif;
+}
+
+.masal-gezinme small {
+  display: block;
+  font: 9px Arial, sans-serif;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.masal-gezinme .sonraki {
+  text-align: right;
+  margin-left: auto;
+}
+
+@media (max-width: 520px) {
+  .kapsayici { padding: 0 22px; }
+
+  .ust-serit-ici {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding: 19px 0 17px;
+  }
+
+  .marka { margin-right: auto; }
+
+  .tema-dugmesi {
+    padding: 8px;
+    font-size: 10px;
+  }
+
+  .tema-noktasi { display: none; }
+
+  .giris { padding: 41px 0 33px; }
+
+  .masal-listesi { grid-template-columns: 1fr; }
+
+  .masal-karti {
+    grid-template-columns: 28px 1fr;
+    gap: 11px;
+    min-height: 0;
+    padding: 25px 3px 25px 0;
+  }
+}
+</style>
+</head>
+<body>
+<header class="ust-serit">
+  <div class="kapsayici ust-serit-ici">
+    <a class="marka" href="#">
+      <span class="marka-adi">Kayıp Rıhtım</span>
+      <span class="marka-aciklamasi">Türk masalları seçkisi</span>
+    </a>
+    <div class="tema-grubu">
+      <button class="tema-dugmesi" data-value="day" aria-pressed="false"><span class="tema-noktasi"></span>Gündüz</button>
+      <button class="tema-dugmesi" data-value="sepia" aria-pressed="true"><span class="tema-noktasi"></span>Sepya</button>
+      <button class="tema-dugmesi" data-value="night" aria-pressed="false"><span class="tema-noktasi"></span>Gece</button>
+    </div>
+  </div>
+</header>
+
+<main class="kapsayici">
+  <section id="collection">
+    <div class="giris">
+      <h1>Bir varmış,<br><em>bir yokmuş.</em></h1>
+      <p class="giris-metni">Kimi bir yolculuk, kimi bir tutam bilgelik.</p>
+    </div>
+    <div class="masal-listesi" id="story-grid"></div>
+    <div class="secki-sonu">
+      <p>Gökten üç elma düşmüş…</p>
+      <span>Biri anlatana, biri dinleyene, biri de okuyana.</span>
+    </div>
+  </section>
+
+  <section id="reader" hidden>
+    <div class="okuma-ust-alani">
+      <a class="geri-baglantisi" href="#">← Bütün masallar</a>
+      <span id="reader-position" class="masal-sirasi"></span>
+    </div>
+    <div class="okuma-ayarlari">
+      <span>Yazı boyutu</span>
+      <div class="boyut-kontrolleri">
+        <button id="smaller" class="boyut-dugmesi">A−</button>
+        <output id="font-size">21 px</output>
+        <button id="larger" class="boyut-dugmesi buyuk">A+</button>
+      </div>
+    </div>
+    <article class="okuma-alani">
+      <header class="masal-baslik-alani">
+        <span class="ust-baslik" id="story-theme"></span>
+        <h1 id="story-title"></h1>
+        <p id="story-intro" class="masal-giris-metni"></p>
+        <hr class="kisa-cizgi">
+      </header>
+      <div id="story-body" class="masal-metni"></div>
+      <div class="masal-sonu">❧</div>
+      <details class="kaynak-bilgisi">
+        <summary>Yararlanılan kaynak</summary>
+        <p id="source-note"></p>
+        <a id="source-link" target="_blank"></a>
+      </details>
+      <nav class="masal-gezinme" id="reader-nav"></nav>
+    </article>
+  </section>
+
+</main>
+<script>
+const stories = [
+  {
+    "id": "dort-ogut",
+    "title": "Dört Öğüt",
+    "theme": "Sabır & sağduyu",
+    "motif": "Bir yol azığı",
+    "intro": "Eve dönen bir yolcunun heybesinde ekmek, aklında dört öğüt vardır.",
+    "source": "https://www.kulturportali.gov.tr/portal/dortogut-1",
+    "sourceName": "Kültür Portalı · Dört Öğüt",
+    "sourceNote": "Türk Folklor Araştırmaları Dergisi, 1975, sayı: 314, der., Muhsin Köktürk.",
+    "paragraphs": [
+      "Bir varmış, bir yokmuş. Vaktin birinde yoksul bir adam varmış. Gün olmuş evlenmek istemiş. Güzel bir kız almış. Evini geçindirecek parası yokmuş. Gurbete çıkmış. Güney illerine gitmiş. Bir ırgat kapısına durmuş. Günlüğüm kaça dememiş, hiç sormamış, tam yirmi yıl çalışmış. Nihayet ayrılmaya karar vermiş. Ağanın yanına çıkmış:",
+      "“Ağam, tam bugün yirmi yıldır kapında çalışıyorum. Hakkım neyse ver. Sılama gideceğim. Anamı avradımı özledim gayri,” demiş.",
+      "Ağa da çıkarmış çalışmasının karşılığı ona üç lira vermiş. Adam almış cebine koymuş. O sıra orada bulunan Ağa'nın karısı adama acımış. Adama:",
+      "“Dur da sana bir çörek yapayım,” demiş.",
+      "kadın gitmiş, çöreği yapmış. Çöreğin birinin içine de beş altın lira koymuş. Adama vermiş.",
+      "“Bu çöreği sakın yolda yeme, karına benden hediye olsun,” demiş.",
+      "Adam çöreği heybesine koymuş, helâleşip yola düşmüş. Yola düşmeden bir daha ağanın yanına varmış.",
+      "“Ağam, epey iyilik ettin. Hakkını helal et,” diye söylemiş. Ağa da:",
+      "“Oğlum dur sana diyeceklerim var, hele bir yol otur,” diye karşılık vermiş.",
+      "“Hayırdır inşallah.”",
+      "“Bana bir lira ver sana bir öğüt vereyim”. Adam çıkarıp bir lira vermiş.",
+      "“İyi dinliyor musun? Sakın geceleyin yola çıkma.”",
+      "-…",
+      "—Bana bir lira ver bir öğüt söyleyeyim. Adam çıkarmış, bir lira daha vermiş.",
+      "—Sakın dibi görülmedik sudan geçme. Anladın mı?",
+      "-…",
+      "“Bir lira daha ver bir öğüt daha vereyim.” Adam cebindeki son lirayı da vermiş.",
+      "“Aslını bilmediğin işte söz sahibi olma.” Adam tam gideceği sırada. Ağa:",
+      "“Dur bir de sana bedava bir öğüt vereyim,” demiş.",
+      "Adam durmuş.",
+      "“Aslını bilmediğin işe burnunu sokma.”",
+      "Adam sağ ol demiş, koyulmuş yola. Yolda bir kervana rastlamış. Kervancıbaşına:",
+      "“Nereye gidiyorsunuz?” diye sormuş.",
+      "Kervancı:",
+      "“Yozgat'a.” diye cevap vermiş.",
+      "“Ben de Yozgat'a gidiyorum. Beni de alın Kervana.”",
+      "Kervancı başı kabul etmiş. Adam kafileye katılmış. Epey yol gitmişler. Nihayet gece olmuş. Adam:",
+      "“Ben artık gitmeyeceğim,” deyince, Kervancı:",
+      "“Neden?” diye sormuş.",
+      "“Gidemem.”",
+      "“Biz bu kadar değerli şeyler götürüyoruz da korkmuyoruz. Sen niye korkuyorsun?”",
+      "“Ben gidemem, siz gidin.”",
+      "Adam böyle cevap verince kervancıbaşı fazla üstelememiş. Devam etmişler yollarına.",
+      "Adam sabahleyin gün ağarınca yola revan olmuş. Bir de bakmış ki yolda kervancıların hepsi ölmüş yatıyor. Kiminin kellesi bir yanda kimininki bir yanda. O zaman kendi kendine: “Liranın birini bulduk” demiş.",
+      "Yine giderken yolda bir atlıya rastlamış. Birlikte yola düşmüşler. Yollarını yalçın bir ırmak kesmiş. Adam bakmış ki suyun dibi görünmüyor. Korkmuş. Atlı: “Hadi terkime bin de karşıya geçelim.” demiş.",
+      "“Yok, kardeş ben binemem.”",
+      "“Hadi canım ne korkuyorsun. Bin geçelim karşıya.”",
+      "“Yeminim var, geçemem,” diye cevap vermiş adam.",
+      "Atlı dibi görünmedik suya girmiş. Girdiği o an olmuş. Bir batmış, bir daha çıkamamış. Adam kendi kendine: “Liranın birini daha bulduk” diye sevinmiş.",
+      "Suyun başında kalan adam, sağa bakmış, sola bakmış sonunda bir yol bulup karşıya geçmiş. Akşam üzeri bir köye gelmiş. Köy odasına konuk olmuş. Bakmış ki bir hatun boğazına bir ip bağlanmış duvarda asılı duruyor. Bir köpek de yatak üzerine yatmış, uyuyor. Yemek getiriyorlar. Önce it yiyor, artığını da hatuna veriyorlar. Adam hiç aldırış etmemiş. Yemeğini yemiş yatmış. Sabah kalkmış yola düşmüş. Arkasından ağanın adamları gelmişler. Adamı ağanın yanına götürmüşler.",
+      "Adam korka korka:",
+      "“Ağam benim suçum ne ki, palas pandıras getirdiniz,” diye sormuş.",
+      "“Bak burada köpek yatıyor. Orada bir hatun bağlı duruyor. İtin artığını hatun yiyor. Be hey adam, senin ağzının içinde dilin yok mu? Niye bir defa nedendir bu cefa diye sormuyorsun?”",
+      "“Benim ağam bana bir öğüt verdi. Aslını bilmediğin işte söz sahibi olma” dedi.",
+      "Ağa adamın bu sözünü çok beğenmiş. Arkasından:",
+      "“Hele bir yol sorsaydın senin de kellen bu keller arasına karışacaktı, diyerek bir kapı açmış ve içinde yatan kelleleri göstermiş.”",
+      "Adam: “Eh liranın birini daha bulduk” diye sevinmiş. Ağa adama bir heybe gözü altın vermiş. Adamlarını tembihlemiş. “Bu adamı köyüne kadar götürün” demiş.",
+      "Adam köyüne gelmiş. Evinin penceresinden bir de bakmış ki ne görsün? İçer de genç bir adam karısıyla dövüşüyor, çağırıp bağırıyor. Adam dayanamamış, tüfeği doğrultmuş, tam tetiği çekeceği sırada aklına ağanın öğüdü gelmiş. “Aslını bilmediğin işe burnunu sokma” Bunun üzerine kapıyı çalmış. Karısına:",
+      "“Beni tanıdın mı? Ben senin kocanım,” demiş.",
+      "Kadın bir bakmış iki bakmış. Sonunda kocasını tanımış. Sarılmış boynuna. Adam bir yandan yan gözle yabancı adama bakıyormuş. Bunu fark eden karısı:",
+      "“O kim biliyor musun?” demiş.",
+      "-…",
+      "“Yirmi sene evvel sılaya gittiğin sırada karnımda bıraktığın oğlun.”",
+      "Karısı böyle deyince adam sevinçten ağlamış. O zaman ağasının kendisine paradan da değerli öğütler verdiğini anlamış. Böylece muratlarına ermişler."
+    ],
+    "textStatus": "complete"
+  },
+  {
+    "id": "kurnaz-kurt",
+    "title": "Kurnaz Kurt",
+    "theme": "Kurnazlık & korku",
+    "motif": "Dağın öte yanı",
+    "intro": "Bir köy, bir kurt ve iki tarafın da söylemediği bir korku.",
+    "source": "https://www.kulturportali.gov.tr/portal/kurnazkurtmasali",
+    "sourceName": "Kültür Portalı · Numan Kartal derlemesi",
+    "sourceNote": "Türk Folklor Araştırmaları Dergisi, 1969, sayı:234",
+    "paragraphs": [
+      "Bir varmış bir yokmuş, Evvel zaman içinde şu bizim Çin’de. Develer tellâl, pireler berber iken, ben anamın anasının beşiğini tıngır mıngır sallar iken, Kalbur elek, kambur felek üstüne söz ederken. Ulu mu ulu, yüce mi yüce bir dağ varmış. Ama ne dağ ne dağmış. Dağ mı desem bağ mı desem diye gören şaşarmış. Doruğuna bakan dağ, eteklerindeki bağlara bakan bağ dermiş. İşte bu dağın yüce doruklarında bir kurt belirmiş.",
+      "Kurt da kurtmuş hani. Canavar gözlü, kalın enseli, ziyankâr mı ziyankâr bir yaratıkmış. Gece düze iner, köye girermiş. Köyün keçi, at, eşek Allah ne verdiyse yermiş. Har vuranın harman savuranın hesabı köyün alikıranı kesilmiş. Köylüler, bakmışlar ki, olacak gibi değil; sarılmışlar silâha, koyulmuşlar etekleri bağ yüce dağ yoluna.",
+      "Az gitmişler uz gitmişler derken dağa gelip yedi koldan dağı taramaya koyulmuşlar. Aman dememişler, uyku nedir bilmemişler, yedi gün yedi gece kurdu izlemişler. En sonunda kurdu görmüşler. Ama ne var ki, vuramamışlar. Bu sefer yedi kolda yedi tuzak kurmuşlar. En sonunda kurnaz kurdu tutup köy odasına getirmişler.",
+      "Köy odası bir âlemdir. Orada kanun köyün gelenekleri ile töresidir. Kanun demek dayak demektir. Bunları bilen kurt odadakilerden korkmuş. Odadakiler de kurttan korkmuşlar. Dayak yerine sorgu sual etmişler. \"Bre kurt demişler, hayvanlarımızı niçin yiyorsun? Yazık değil mi fakir fukaraya?\" Kurt önce susmuş, sonrada soruya şöyle karşılık vermiş.",
+      "“Ben bir kurdum. Bende de can var. Sizin gıdanız ekmek ise benimkisi de et. Hayvanlarınızı yemeyeyim de ne yiyeyim? İstiyorsanız hayvanlarınızın kurtulmasını, getirirsiniz her gün bir kilo et bana, O zaman yemem hayvanlarınızı.”",
+      "Köylüler çaresiz peki demişler, kurdu dağa koyvermişler. Bir yuva yapmışlar köylüler kurda. Sıraya koymuşlar kendilerini. Sırası gelen eti götürür kurdu beslermiş. Ne var ki, günler günleri, haftalar haftaları kovalamış derken, akan zaman içinde köyün hayvanları bitmeye ramak kalmış. Bakmışlar ki, olacak gibi değil; vazgeçmişler et götürmekten köylüler. Kurt yuvasında bir gün iki gün derken sabırla beklemiş, köylülerin et getirmelerini. Bakmış ki, ne gelen var ne giden gözleri kararmış açlıktan, kulakları düşmüş yere. Gözlerinde bir kin, bin öfke.",
+      "Kalkmış yerinden kurt, yavaş yavaş inmiş düze. Bakmış ki, bir eşekle sıpası otluyor düzde. Eşekten bir kilo, sıpasından yarım kilo kararlayıp yemiş. Gerisin geriye dönüp yuvasına girmiş.",
+      "Akşam olmuş, eşek, sıpası ile eve geri gelmiş. Attığı nara ile dağı taşı inletmiş. Kurttan ağlaşmış, sahibinin yüreği dağlanmış. En sonunda sahibi soluğu köy odasında almış. Toplanmış köylüler, koyulmuşlar yola. Kurdu tutup getirmişler tekrar köy odasına \"Eeee… demişler söyle bakalım:\"",
+      "“Niçin yedin eşek ile sıpasını?” Kurt kaldırmış başını, vermiş karşılığını.",
+      "“Et getirmezseniz yerim bile danasını.” \"İyi ama\" demiş köylüler:",
+      "“Bak köyde hiç hayvan kalmadı. Ne çift sürecek, ne de güdülecek hayvan, bizler ne ederiz bu zaman.”",
+      "“Ben anlamam demiş kurt. Yoksa sizi de yerim.”",
+      "İşte o zaman olan olmuş, odadakiler bir iyice korkmuş. Bir çift söz etmeden, yan gözle bile kurda bakmadan dışarı çıkmışlar.  Kurt kahkahayı basmış.",
+      "Meğer o da korkmuş. Yaptığı kurtulmak için yolmuş. Odadan çıkmış. Kaçıp bilmedik illere gitmiş, Gidiş o gidiş. Bir daha ne kurdu gören olmuş, ne de köyün hayvanlarını yiyen. Onlar ermiş muradına, darısı dertlilerin başına."
+    ],
+    "textStatus": "complete"
+  },
+  {
+    "id": "tuz-kadar-sevgi",
+    "title": "Tuz Kadar Sevgi",
+    "theme": "Sevgi & değer",
+    "motif": "Bir tutam tuz",
+    "intro": "Bazen en büyük sevgi, en küçük şeyin adıyla anlatılır.",
+    "source": "https://www.nosyfox.com/tuz-kadar-sevgi/",
+    "sourceName": "Nosy Fox · Tuz Kadar Sevgi",
+    "sourceNote": "Öcal Oğuz (der.), Hikayeler ve Masallar, Kültür Bakanlığı Yay.",
+    "paragraphs": [
+      "Vakti zamanında, günlerin birinde bir padişah varmış. Bu padişahın da üç tane kızı varmış. Bu kızlar yetişip kemale gelmişler, babalarının aklına bunları ere vermek gelmemiş. Bu üç kardeş müşavere ederler:",
+      "“Babamız bizi ere vermeyecek, ne yapalım da bunu babamıza anlatalım, bizi ere versin?” Küçükleri der ki:",
+      "“Haydi, bağa gidelim, herkes şahsına göre bir karpuz alsın. Babamıza hediye gönderelim. Vezirleriyle beraber yesinler. Bundan bir hisse alabilirlerse alırlar, alamazlarsa ne yapalım. Çekecek olduğumuz çile bu.”",
+      "“Haydi bakalım.” Deyip kalkarlar. Elini eline, eteğini beline sekerek, dökerek, ökçeleri büzüklerine değerek bağa giderler. Üç tane karpuz alırlar. Büyük kız öyle bir karpuz alır ki içi hiç yenecek halde değil, ortanca kızın karpuzundan da birer dilim ancak alınır. Küçük kız ise öyle bir karpuz alır ki tam kıvamına gelmiş, yenecek bir zamanda. Eve gelince büyük kız karpuzunu altın tabağın üstüne koyar, yanına da altın çatal ve bıçakları hazırlar, padişaha gönderir. Padişah:",
+      "“Getirin bakalım, bu nedir?”",
+      "“Büyük kızınız hediye gönderdi.”",
+      "Aldılar karpuzu meydana, bıçağı vurdular ki hiç yenecek hali yok.",
+      "“Kaldırın atın bu karpuzu.”",
+      "Bu karpuzu kaldırıp kapıya attılar. Ortanca kız da aynı şekilde karpuzunu gönderdi. Onu da attırdı kapıya. Sonunda “küçük kızın karpuzunu kestiler ki tam yenecek karpuz. Başladılar yemeye. Padişah:",
+      "“Oh, gördün mü yenecek karpuzu, mal bu.”",
+      "Vezir hemen padişahın kolunu kaptı: “Dur padişahım, hele karpuzu yeme.”",
+      "“Ne olacak?”",
+      "“Ne anladın sen bu karpuzlardan?”",
+      "“Ne olacak çocuklar, birer karpuz göndermişler. Biz de yedik.”",
+      "“Yok. O değil.”",
+      "“Ya?”",
+      "“Bak, büyük kızının ere gidecek zamanı geçti; ortancası da aha işte geçti geçecek, bir gecelik hali var; küçük kızının da tam ere gidecek zamanı.”",
+      "“Çağırın büyük kızımı, gelsin. “Büyük kızını çağırırlar, gelir:",
+      "“Kızım sen beni ne kadar seversin?”",
+      "“Baba, bu dünyada en lezzetli nimetlerden iyi severim seni.”",
+      "“Seni verdim filan vezirin oğluna.”",
+      "O çıktıktan sonra ortanca kızını çağırır. Ona da aynı soruyu sorar. Ondan da benzer bir cevap alınca onu da başka bir vezirin oğluna verir.",
+      "“Küçük kızımı çağırın gelsin.”",
+      "Küçük kızı gelir, aynı soruyu ona da sorar, o da cevabı verir:",
+      "“Baba, seni tuz kadar severim.”",
+      "“Ya… Ben düştü düştüm de tuz oldum öyle mi? Bunu götürün, Tembel Ahmet'in evine atın!”",
+      "Tembel Ahmet de anasından doğdu, tek day durup da bir adım atacak zamanında yürüdüğünü gördüler. Mütebakisi yatıyor. Yirmi yirmi beş yaşlarına geldi; anası dilenir, deşirir, onu yedirir, içerir. Kendi eliyle de yemez, anası yedirir.",
+      "Kızı götürüp Tembel Ahmet'in evine atılar. Padişah kızı bu, su getirip verecek, ekmek pişirip yedirecek; kaynanası da dışardan dilenip deşirip getirecek.",
+      "Haberi kimden verelim, padişahın kızından. Padişahın kızı parmağındaki yüzüğü çıkartıp neneye verir:",
+      "“Nene, bu yüzüğü al, falan kuyumcuya götür. Ne verirse al. O parayla şu mendilin dolusu idare getir, üç baş da çubuk al. Artanını da geri getir.”",
+      "Nene gider, o yüzüğü verip parayı alır. Mendili doldurur yem yiyecek; üç bağ da çubuk alır, vurur koltuğuna gelir. Padişahın kızı su kaynatır, çubukları tekneye koyar. Kazanın kaynayan suyunu çubukların üzerine döker, yemeğini pişirir Tembel'in. Bunu yedirir içirir. O gece yatarlar.",
+      "Hayırlı sabahlar cümlemizin üzerine açılsın, sabah olur. Sabahleyin nene yine deşirmeye gider. Ahmet akşamdan hararetli yedi ya, susar:",
+      "“Padişah kızı, bacı bir su ver, içeyim.”",
+      "Kız gidip kâseyle su getirdi, koydu yanına. Ahmet kızı çağırdı:",
+      "“Gel içir bu suyu.”",
+      "“Gözün kör olsun, elin kırık değil ya, iç!”",
+      "“Bacı, sen bilirsin, gel şu suyu içir bana.”",
+      "Kız birini hatır için içirdi. İkinci defa isteyince yine getirdi:",
+      "“Bacı, gel şu suyu içir.”",
+      "“Kalk kendin iç!”",
+      "“Kalkar vururum, döğerim seni.” diyene kadar padişahın kızı hemen yorganı Ahmet'in sırtından atıp çubuğu çekti. Tembel baktı ki padişahın kızı kendini öldürecek, kapıdan dışarı kendini koyuverdi. Çıktı ama, çıplak:",
+      "“Bacı, çamaşırlarımı giyeyim de ondan sonra gideyim.”",
+      "“Yok, şu mendili al, yanında bulunsun. Çamaşırlarını da vereyim, giyin. Bu mendili akşama kadar dolduramazsan gelme, kapıdan içeri giremezsin.”",
+      "Çamaşırlarını verir buna. Tembel çamaşırlarını giyinir, mendili alır, gider. Bunu gören komşusu, köylüsü, delikanlısı ihtiyarı peşine düşer; sanki bir canavar geliyor. Bu doğru deniz iskelesine iner. Bakar ki bir vapur gelmiş, kaburgayı iskeleye verip yükünü boşaltıyor. Hamallar taşır, arabalar taşır. Buna hiç kimse demiyor ki: “Gel, bu yükü götür de sana kırk para vereyim.” Durdu durdu, iş yok. İki tane dengin bir tarafa ayrıldığını görür. Bütün yükler taşınır, derken akşam olur. Paydos edecekler, daha bir şey kalmadı. O iki denk de orda, tüccar da orda. Tüccar seslenir adamlarına ki araba getirsinler de bunları götürsünler, Bu hemen tüccarın yanına yaklaşır:",
+      "“Efendi, bunları ben götüreyim.”",
+      "“Götürebilir misin oğlum, ağır bunlar. Gel bakalım?",
+      "Dengin birini omzuna aldı, birini koltuğuna aldı, sürdü doğru mağazanın kapısına. Ardiyenin kapısını açtılar, denkleri içeri atar.",
+      "Tüccar bu denkleri ötekilerinin üstüne çıkarttıracak, oğlan bir şey der diye korkuyor:",
+      "“Oğlum, bunları şu denklerin üzerine atamaz mısın?”",
+      "“Hay hay, atayım.”",
+      "Hemen bu iki dengi tutup öbürlerinin üzerine atar. Mağazaya çıkınca tüccar düşünmeye başlar. “Az versem de kızıp bana bir tokat vursa beni öldürür, çok versem de hesaba gelmez.” Neyse Tembele bir miktar verdi. Ahmet hemen oradan bakkala, fırına gider, mendili doldurur, birkaç kuruş da artırır, onu da mendilin ucuna düğümler, kapıya gelir:",
+      "“Tak tak.”",
+      "Padişahın kızı hemen seğirtir. Ahmet gelmeden evvel nene eve gelir ki ev silinmiş, süpürülmüş yemek pişmiş oğlu yok! Yatağı da kalkmış:",
+      "“Kızım ne oldu oğlan?”",
+      "“Nene, çubukları sana da çekmeyeyim, gel yerine otur. Sen oğlanı filan düşünme, gel yerine otur.”",
+      "Nene yerine oturduktan bir müddet sonra kapı vurulur. Tembel içeri girer. Kız elinden mendili alıp masaya koyar. Hemen bir tuzlu su hazırlayıp Ahmet'in omuzlarını, kollarını, bacaklarını bununla adamakıllı temizler, yıkar. Tembel'i oturttuktan sonra sofrayı kurar, yedirir, içirir, yatırır.",
+      "Sabah olunca Tembel daha durur mu? Çalışmaya gider. Böylece her gün gidip üç beş kuruş alıp gelir. Padişahın kızı bir gün Ahmet'e der ki:",
+      "“Ahmet, böyle olmaz. Sen bir eşek al, bir de balta al. Dağdan odun çek, odunculuk et. Hamallığı bırak artık.”",
+      "Biriken paralarla Ahmet bir eşek alıp takımını düzer. Odun getirip satar; üç kuruş, beş kuruş, artık neye satıyorsa,",
+      "Bir gün gider, odun getirir. Bu yük odunu dolandırdı, olmadı satamadı.",
+      "Peşine bir hoca çıkar:",
+      "“Ahmet oğlum, odunları satamadın mı?”",
+      "“Hayır hoca, satamadım.”",
+      "“Odunları bana verir misin?”",
+      "“Hay hay hoca, vereyim.”",
+      "“Eee.. Sür gelsin; ama ben para yerine bir söz veririm.”",
+      "“Olsun hoca,”",
+      "Ahmet, odunları hocanın kapısının önüne çekip yıkar; doğrayıp içeri atar:",
+      "“Hoca, ver sözümü.”",
+      "“Oğlum, ilmin başı sabır.”",
+      "“Daha?”",
+      "“Oğlum, ben sana “Bir söz söyleyeceğim.” Demiştim.”",
+      "“Peki.”",
+      "Ahmet padişahın kızının yanına gider: “Bacı, odunları satamadım, bir söze verdim.”",
+      "“Ne sözü Ahmet?”",
+      "“İlmin başı sabır.”",
+      "“Kulağına koy. Ahmet bu söz bir gün sana lâzım olur. Bak, senin yevmiyen gitti bugün. Hem lâzım olacak bu söz.”",
+      "“Peki.”",
+      "Ahmet ertesi günkü odunu da satamaz, yine o hocaya rastlar:",
+      "“Ahmet, odunları bana ver.”",
+      "“Vereyim hocam,”",
+      "“Ahmet, fiyatını biliyorsun, yine bir sözüm var.”",
+      "“Olsun hocam,”",
+      "Odunları götürüp hocanın kapısına yıkar, hocaya:",
+      "“Hocam, der ver sözümü.”",
+      "“Ahmet, “Sabrın başı selâmettir' unutma.”",
+      "“Peki hocam.”",
+      "Ahmet sözünü alıp evine gelir, meseleyi padişahın kızına anlatır. O da:",
+      "“Bu sözü sen kendi kafanda sakla, bana göre bir şey yok.”",
+      "Ahmet ertesi günü odunları yine satamaz, hocaya rastlar:",
+      "“Ahmet, odunları bana ver.”",
+      "“Vereyim hocam.”",
+      "Ahmet odunları hocanın kapısına çeker, hoca da sözünü verir.",
+      "“Haberi kimden verelim, Tembel Ahmet'ten. Ahmet böylece oduna devam eder. Bir gün padişahın kızı Ahmet'e der ki:",
+      "“Sen böyle odun taşımaynan gün geçiremezsin, bunun kışı da var. Kış gelince sen dışarıda odun yapamazsın. Git, bir batman un getir, sana azık edeyim.",
+      "Dağda bir iki gün odun hazır et, bir mağaraya istif et. Kışın bir yol bulur onları yükler gelirsin.",
+      "“Peki bacı, olsun.”",
+      "Ahmet bir batman un getirir. Padişahın kızı yuğurup ekmek pişirmeye oturur, Tembel de arkasında. Kız bir yandan ekmek pişirir, tandırdan çıkarır, Ahmet bir yandan yer. Biri pişirir, biri yer. Kız son ekmeği de tandırdan alıp geri döndü ki ekmek bir tane yok.",
+      "“Ahmet, ne oldu buradaki ekmeklere?” “Bacı ekmekleri yedim.”",
+      "“Ahmet, ocağın bata senin. Sen dağda ne yiyeceksin?”",
+      "“Adam, bacı işim mi yok, sırtımda götürüp yük edeceğime karnımda götürürüm.”",
+      "Ahmet kalkıp eşeğini semerler, baltasını alır, “Allahısmarladık”ı çekip ormanın yolunu tutar. Orada büyük bir mağara bulur, mağaranın yanındaki çamları köküyle, dalıyla içeri alır. Mağarayı odunla doldurur. Akşam olunca da eşeğini yükler, çarşıya gelip odunları satar. Akşam eve gelince padişahın kızı sorar:",
+      "“Ne ettin Ahmet?”",
+      "“Ne edeceğim bacı, odun yapıp bir mağaraya doldurdum” “Peki Ahmet.”",
+      "Ahmet odunculuğa devam eder. Güz gelince kar yağar. Dağa gidip odunları sakladığı mağarayı arayıp bulur. Bakar ki ne odun var, ne bir şey. Vermişler mağaraya ateşi. Mağaradaki bütün odun yanıp kül olmuş.",
+      "“Ula… Ben ne edeyim şimdi, padişahın kızına ne yüzle gideceğim? Hele şu kömürlerden bir çuval doldurayım da götüreyim.”",
+      "Oradaki kömürlerden toplayıp torbasına doldurur, dışardan da bir iki kucak odun yapıp eşeğin yanlarına vurur. Sürdü geldi eve. Kapıdan geçerken:",
+      "“Bacı, mağarayı yakmışlar, bütün odunlar kömür olmuş. Biraz kömür getirdim.”",
+      "Padişah kızı dikkatle baktı ki ne görsün, torbadakiler hep ‘lira'. “Ahmet, eşeği buraya yık, bu kömürlerden orada çok var mı?",
+      "“Bacı mağara bununla dolu.”",
+      "“Ahmet, sen odunu filan bırak, terk et. Sen orada kül kömür bırakma, toz toprak ne varsa hepsini getir.”",
+      "Ahmet tarladı topladı; mağaradaki külü kömürü olduğu gibi eve yıktı. Evde gün geçirirken bir gün kapıda bir tellâlın bağırdığını duyar.",
+      "“Eyy, at binen, kılıç kuşanan kim var? Beş yüz lira aylığı var!”",
+      "Ahmet hemen dışarıya fırlar:",
+      "“Ne diyorsun tellâl?”",
+      "“Eyyyy, at binen kılıç kuşanan…. Beş yüz lira aylık!”",
+      "“Neredeymiş bu iş?”",
+      "“Peşime gel.”",
+      "Giderler, şehrin kenarına yedi tane bezirgân mallarını yıkmışlar, yanlarına bir hizmetkâr arıyorlar.",
+      "“Oğlum, iyi at biner misin?”",
+      "“Hay hay.” Hâlbuki at yüzü bile görmemiş!",
+      "“Peki, bizimle gelir misin?”",
+      "“Gelirim.”",
+      "“Oğlum, sana beş yüz lira aylık vereceğim, bizimle gelir misin?”",
+      "“Tabii gelirim.”",
+      "“Git, bu gece evinde yat, çamaşırını al gel. Yarın şu saatte gel, gideceğiz.”",
+      "Eve gelir; bacısına, anasına anlatır: “Ben beş yüz lira aylıkla gidiyorum” Padişah kızı bir mendil çıkartıp buna verir:",
+      "“Ahmet, bu mendil kırmızı lira ile dolup gelecek. O zaman sen benim, ben senin oluruz.”",
+      "Ahmet mendili alıp gider, bezirgânların yanına varır. Buna bir kılıç verirler, atını gösterirler. Bezirgân hizmetkârlarına emir verir:",
+      "“Bunun emrindesiniz, emir bundadır. “Yık!” dediği yerde yıkarsınız, “Yükle! dediği yerde yüklersiniz. Bunun emrinden dışarı çıkmayacaksınız.”",
+      "Yedi bezirgân katırlarını yükleyip yola verirler, kendileri de biraz daha çadırlarında kalırlar. Gidenler ise bir zaman gittikten sonar bir dağın başına varırlar ki ot derya deniz. Otu gördüğü gibi Ahmet hizmetkârlara seslenir:",
+      "“Ulan hizmetkârlar, eyleyin, “Eylenirler.",
+      "“Yıkın şuraya katırı.",
+      "“Etme kardeş, gitme, kardeş, burası haramilerin yeridir, biz burada yatamayız. Haramiler bizim malımızı talan ederler, bizi bütün kırarlar. Haydi çekip gidelim.”",
+      "Ulan ‘yıkın!' diyorum size. İğne giderse ben çuvaldız öderim.”",
+      "Hizmetkârlara zaten ağaları emir vermişti. Bunlar orada yıktılar, diğer altı tanesi kaçtılar. Geriden bezirgânlar geldiler, malların sahipleri:",
+      "“Ahmet oğlum, niye yıktın buraya?”",
+      "“Baba, senin neyin lâzım.”",
+      "“Oğlum, burası haramilerin yeri.”",
+      "“Baba sen gir çadıra, iç kahveni, keyfine bak. Senin iğnen giderse ben çuvaldız ödeyeceğim.",
+      "Hizmetkârlara emir verir, hepsi yatarlar, bezirgânlar da yatarlar, Ahmet de yatar. Gel haramilerden haber verelim.",
+      "Haramiler dağın başına çıktılar, Köroğlu'nun Çamlıbel'i gibi, sahvermiş herif hayvanı, yatıyor. “Ulan, bunu vuralım, tutalım. “Haramibaşı der ki:",
+      "“Yok, biz buraya gidemeyiz, bu tek atlı tekin değildir. Biz kırk yıldır bu dağda gezeriz, buraya kimse gelmedi. Burada kuş uçmaz, kulan yürümez. Bunda bir tutar olmasaydı, bir güveneceği olmasaydı kervancı buraya yıkamazdı. Siz şu ileri gidenlere bakın hele.”",
+      "İlerden gidenleri bastılar, nereye gittilerse gidip vurdular, kırdılar, talan ettiler. Yükte yeğnik, pahada ağır malları toplayıp gittiler.",
+      "Haberi kimden verelim, beriki bezirgânda, Ahmet'in kolundan. Sabahtan kervanı yükleyip salıverdiler. Gittiler ki ne görsünler. İlerdekileri elleri koynunda, başlamışlar ağlamaya,",
+      "Sorarlar:",
+      "“Ulan, ne oldu size?”",
+      "“Biz bütün talan olduk, sen ne hikâye yapıyorsun?”",
+      "“Bize hiç “Çıt” eden olmadı, kendimiz de uyukladık. Malımız da adamakıllı rahat etti, biz de rahat ettik.” Ahmet'e döndü:",
+      "“Ahmet oğlum, aylığın oldu yedi yüz lira, önde giden perşenk yüklü katır da yüklüyle beraber senindir.”",
+      "Bunlar sürdüler, ömürleri de neleri varsa yüklediler, gittiler. Bezirgânlar yine geriden geliyorlar. Yolda giderken hava bozdu, gök gürledi, şimşek çaktı.",
+      "Ahmet seslenir:",
+      "“Hizmetkârlar.”",
+      "“Efendim.”",
+      "“Yıkın şuraya!”",
+      "“Etme, ağa gitme ağa, çıkalım o yüksek yere de orada yıkalım. Buraya yıktık mı, gök gürlüyor, şimşek oynuyor, afet olacak, afetin içinde kalacağız.”",
+      "“Lan yık, it oğlu it. Gereğini ben düşünürüm, siz yıkın!”",
+      "Yıktırır oraya. Öbürleri yine kaçtılar, güya bir selâmete çıktılar. Ahmetlerin yattığı yere damla düşmedi; sabahtan yükleyip yola çıktılar ki ne çıksınlar, Onların bütün malları suyun içinde kalmış.",
+      "Sorarlar:",
+      "“Baba nedir, sizin bu haliniz?”",
+      "“Gece sele kaldık.” Bezirgân, Ahmet'e seslenir:",
+      "“Ahmet, ikinci katır da senin, aylığın da bin lira oldu.”",
+      "Sürüp yola devam ederler. Şehrin kenarına yaklaştılar. Şehre girmeyip malları şehrin kenarına yıktılar, orada yattılar. Geriden bezirgân geldi:",
+      "“Ahmet oğlum, ne ediyorsun? Herkes gitti, malını akşamdan satacak, bizim malın kıymeti daha kalmayacak. Sabahtan malın kıymeti düşecek, biz mal satamayacağız.”",
+      "“Ağa, sen otur yerinde, neyine lâzım. Onların yüz paraya verdiğini ben beş kuruşa vereceğim. Sen yerinde otur.”",
+      "Orada yattılar. Sabah olunca bunlar çarşıya girerken akşamdan gidenler dışarı çıkıyorlar:",
+      "“Ne ettiniz, kaça alıp, kaça sattınız?”",
+      "“Yüzer paraya sattık.” Ahmet çarşıya girdi.",
+      "“Beş kuruş, beş kuruş.”",
+      "Dayandı mal gidiyor. Bezirgân, Ahmet'e seslenir:",
+      "“Ahmet üçüncü katır da senin oğlum, aylığın da bin iki yüz lira.”",
+      "Ahmet kendine verilen üç katırın yükünü satar, alacaklarını alıp yükler. Evvelce nereden geldiler. Trabzon yolundan; bu sefer döndüler Erzurum yolundan, Urfa, Diyarbakır taraflarına. Bir çöle vardılar, tek kuyu var. O kuyudan yedi gün, yedi gecelik su alacak hayvanlarına ve kendilerine. Yedi bezirgânın altısı vaktiyle su vermeye girmiş, orada kalmışlar. Şimdi sıra Ahmet'in.",
+      "“Ahmet oğlum, gel yanıma.” Ahmet bezirgânın yanına gelir:",
+      "“Nedir ağa?”",
+      "“Oğlum, biz yedi taneyiz. Bunlar benim arkadaşım ama, aslında arkadaşlarımın oğullarıdır. Ben bunların babaları ile arkadaş idim. Altı tanesi sıra ile girdi, bu kuyuda kaldı. Şimdi sıra bana geldi. Oğlum şimdi suyu girip ben vereceğim. Çıktım, ne âlâ; mal benim. Çıkmadım, bu mal senin, bu saltanat senin Evde de bir kızımla bir ailem var. Ailem annen, kızım da senin ailen. Ben ineceğim bu kuyuya.”",
+      "“Yok, ne münasebet ki sen inesin. Kuyuya ben ineceğim.”",
+      "“Ulan oğlum, ben gittim mi, senin annen var, bacın var. Bunlar bana ne der.”",
+      "Ahmet bu senet yazıp onlara da imzalatır, hizmetkârlara da imzalatır: “Ben kendi gönlümle bu kuyuya iniyorum. Yedi saat beklersin, çıkarsam ne âlâ. Çıkmazsam yedi gün beklersin. Yine çıkmazsam yedi gün üzerine bir daha geleceksin. Çıktım, ne âlâ, çıkmazsam kanım sana helâl olsun. Ama, bekleyeceksin.”",
+      "“Peki.”",
+      "Taktılar âleti beline, astılar kuyuya. Yedi günlük su çekip verdi yukarı:",
+      "“Asıl halatı, geleyim.”",
+      "Halattan tutacağı sırada bir Arap bileğinden sarılır, çekip alır götürür bunu. Girdiği ne konak. Yeryüzünde acaba öyle bir konak var mı? Sedirde oturmuş bir delikanlı; ayın on dördü; günün on beşi bir kız; bir tarafta altın sinisi; meydanda sinisinin üzerinde yeşil kurbağa. Ahmet oraya girer:",
+      "“Selâmünaleyküm.”",
+      "“Aleykümselâm.”",
+      "Delikanlı oradaki kızı çağırıp der ki:",
+      "“Kardeşim, al bu yiğide odaları gezdir.”",
+      "Aldı Ahmet'i kız, peşine gitti. Açtı bir oda. İçerisi insan kellesi, açtı bir oda, içerisi insan bacağı; açtı bir oda, insan cendiği. Ahmet dedi ki:",
+      "“Adın ne senin:”",
+      "“Ahmet.”",
+      "“Ahmet, kardeşim sana bir sual soracak. Sualine cevap verdin. Yakanı kurtardın. O zaman sana der ki: ‘Dile dileğini, vereyim muradını.' Sen de dersin ki: ‘Babanın kırk senedir el değmemiş bağından bir terki nar ver bana.' Sana her ne derse desin, ne verirse versin; inci, cevahir, altın, yakut, hepsini reddet.",
+      "‘Bana bir teneke nar vereceksin.' diyeceksin.”",
+      "“Peki.”",
+      "“Yok, eğer kardeşimin muradını yerine getiremezsen sen de bunlar gibi olacaksın. İşet görüyorum.”",
+      "“Peki,”",
+      "Ahmet dönüp kızın kardeşinin karşısına oturur. Delikanlı Ahmet'e sorar:",
+      "“Delikanlı, sana bir sorum var. Buna cevap vereceksin.”",
+      "“Peki.”",
+      "“Ben mi güzel, kız mı güzel, Arap mı güzel, sininin üzerindeki kurbağa mı güzel?”",
+      "Ahmet bir düşündü: “Biz ne dedik hocaya, hoca ne dedi bize, “İlmin başı sabır, sabrın başı neydi, selâmet, gönül kimi severse güzel odur.” diyene kadar oğlan hiddetlendi:",
+      "“Arap, kılıcı hazırla! Ne söylüyorum sana; ben mi güzel, kız mı güzel, Arap mı güzel, sininin üzerindeki kurbağa mı güzel?”",
+      "“Ne senden korkarım, ne Araptan korkarım, ne kılıçtan korkarım. Ben şu noktayı düşünüyorum. Ne bağırıyorsun, bağırmakla beni korkutamazsın, kılıç ile de korkutamazsın. Sualini tekrar et.”",
+      "“Ben mi güzel, kız mı güzel, sininin üzerindeki kurbağa mı güzel, Arap mı güzel?”",
+      "“Gönül kimi severse güzel odur.”",
+      "Kurbağa yavaş yavaş şişmeye ve büyümeye başladı. Delikanlı bir daha sordu:",
+      "“Doğru söyle, ben mi güzel, kız mı güzel, sininin üzerindeki kurbağa mı güzel?”",
+      "“Çok söyleme, gönül kimi severse güzel odur.”",
+      "Kurbağa biraz daha şişip büyüdü.",
+      "“Doğru söyle, ben mi güzel, kız mı güzel, sininin üzerindeki kurbağa mı güzel?”",
+      "“Arkadaş patlama, gönül kimi severse güzel odur.” demesiyle kurbağa patlayıverdi. Oğlan bunun nikabını çekip alır. Bir kız dikiliverir, ne oradaki kıza, ne delikanlıya, ne de araba benzer; sanki gün vurdu içeri. Delikanlı Ahmet'e der ki:",
+      "“Dile dileğini.”",
+      "“Arkadaş, benim senden hiçbir dileğim yok.”",
+      "“Dilek dile, dilek!”",
+      "“Dileğim odur ki, babanın el değmemiş bağından bir terki nar isterim.”",
+      "“Arkadaş, narı ne edeceksin, dünyada her ne istersen iste benden, altın iste, yakut iste, inci iste, ne istesen iste.”",
+      "“İstemem, bir terki nar isterim babanın el değmemiş bağından.”",
+      "“Kalk kız, şu terkiyi al da bağdan nar doldur, gelin”",
+      "Kızla Ahmet bağa gittiler. Kız ile terki narlarla doldururken birkaç tane de cebine atar. Oradan delikanlının yanına gelirler. Ahmet der ki:",
+      "“Beni aldığın yere götür bakalım. “Oğlan, Arap'a seslenir:",
+      "“Bunu nereden aldınsa oraya bırak.”",
+      "Arap yukarı seslenir: “Asın, al atı asın!”",
+      "Yukarıdan al atı asarlar. Ahmet'i yukarı çekip alırlar. Oradakilere aşağıda başından geçen serencamı anlatır Terkiyi de katırlarının üzerine atar. Allahısmarladık'ı çekerler. “Allahısmarladık sizi, duadan unutmam biz; sağ isek inşallah göreceğiz birbirimizi. “Sürüp geldiler memleketlerine.",
+      "Ahmet gittikten sonra padişahın kızı elindeki külçeyi satıp padişahın konağından âlâ bir konak hazırlar, başıyla, bahçesiyle her şeyiyle. Ahmet dolandı geldi eve, evine gerecek. Sürüp sokaktan gelir, çıktı ki ne gelsin. “Biz padişahın köşküne geldik, yolu yanlış mı geldik? Ne etik biz, hele geri dönelim bakalım.” Meydandan bir daha dolanır, yine aynı sokağa gelir, aynı konak. “Biz yine yanlış geldik, padişahın konağına geldik. “Tekrar dolaşmaya gider.",
+      "Haberi kimden verelim, padişahın kızından. Padişahın kızı konağın penceresinden dışarıyı seyrediyor. Tembel gelir, geri döner gelir, yine döner. Padişah kızı cariyelere seslenir:",
+      "“Kızlar.”",
+      "“Emret hanım.”",
+      "“Gelen Ahmet'tir. Yakalayın, erteğinden, merteğinden; hiç ayaklarını yere vurdurmadan yanıma çıkarın.”",
+      "Kızların elleri ellerine, etekleri bellerine, ökçeleri büzüklerine değerek, sekerek, dökerek geldiler, indiler. Ahmet'i kapmaları ile “Kızlar durum, nedir sizin derdiniz, nedir zorunuz?” derken kapıp padişahın kızının karşısına getirmeleri bir olur:",
+      "“Ahmet, nedir bu halin?”",
+      "“Bacı, ben şaşırdım, gelemedim.” “Ahmet niye gelemiyorsun?”",
+      "“Bacı, ben gittiğimde bu düzen, bu konak yoktu.”",
+      "“Hele gel bakalım.” Ahmet de cebinden narları çıkartıp padişahın kızına verir, heybeyi de çıkartıp ortaya koyarlar. Kız narları gördüğü gibi:",
+      "“Kızlar, herkes yerine!” diye çıkışır, Kızlar yerlerine çekilirler. “Ahmet, bunları nereden buldun?”",
+      "“Bacı, terki hep ondan.”",
+      "Padişahın kızı terkiyi açtı ki ne görsün, hep ondan, olduğu gibi nar.",
+      "“Kalk Ahmet, daha durma. Padişahın olanca askerini, hepsini davet edip buraya getireceksin. Gidip padişahı davet edeceksin. Hangi gün, hangi saatte geleceğini sana söylesin.”",
+      "“Peki.”",
+      "Ahmet daha yerine oturmadan padişahın yanına gider, padişaha bir resmi tazim yapar:",
+      "“Ne o Ahmet?”",
+      "“Şevketlim, seni davet ediyorum. Konağa geleceksin, bütün ordunla beraber. Hangi gün, hangi saatte geleceğini de söyleyeceksin.”",
+      "“Git Ahmet, Perşembe günü saat on ikilerde gelirim.”",
+      "“Peki.” Tembel gelip padişahın kızına anlatır: “Perşembe günü saat on ikide gelecek.”",
+      "Padişahın kızı hazırlığını görür, aşçılar getirir, etini kasaplarla kontrat eder, her şeyini hazır eder. Padişah da dediği saatte gelip konağa misafir edilir, askerler yerleştirilir. Padişahın yemek yiyeceği yere bir perde çekerler, arkasında kızı oturur. Kız arkadan yemekleri verir. Ahmet de sofraya koyar. Kız yemeklerden birini tuzlu yapar, birini de tuzsuz yapar. Önce tuzlu yemeği verir. Padişah bu yemeği vezirleri ile beraber yer. İkinci yemeği alınca bir lokmadan fazla yiyemez. Öteki tarafa sürer. Arkasından tuzlu bir yemek verirler, padişah başlar bundan yemeğe:",
+      "“Hakikaten dünyanın tadı tuzmuş.” Padişah bunu der demez kızı perdeyi açıp babasının karşısına dikilir:",
+      "“Baba, ben seni ‘Tuz kadar severim.” dediğim zaman bu Tembel'in yanına atmıştın ki dilenip deşireyim. Allah, öyle bir Allah'tır ki bak, işte Tembel'i ne hale getirdi, senin köşkünden âlâ köşk yaptırdı, senin havuzundan âlâ havuz yaptırdı, senin bağından âlâ bağı var. Bu hale gelene kadar bu benim kardeşim idi, ben de onun bacısı. Biz daha kardeş bacıyız. Şimdi bu saat bizim akdimizi icra edeceksin.” deyip kız perdenin arkasına çekilir. Padişah da hemen Ahmet'i kızına nikâh eder.",
+      "Onlar yiyip içip yer altına geçtiler, onlar orada cefada, biz burada sefada. Gökten üç elma düştü, ikisi dinleyenlere, biri de söyleyen boşboğaza. Ustamızın adı Hıdır, elimizden gelen budur."
+    ],
+    "textStatus": "complete"
+  },
+  {
+    "id": "korkak-adam",
+    "title": "Korkak Adam ve Devler",
+    "theme": "Zekâ & cesaret",
+    "motif": "Bir parça peynir",
+    "intro": "Devlerin karşısına çıkan küçük bir adam, gücünü aklından alır.",
+    "source": "https://www.masalsitesi.com/Korkak-Adam-ve-Devler-Masali.html",
+    "sourceName": "Masal Sitesi · Korkak Adam ve Devler",
+    "sourceNote": "Türk Folklor Araştırmaları Dergisi, 1960, sayı: 130",
+    "paragraphs": [
+      "Evvel zaman içinde, kalbur saman içinde, deve tellâl iken, pire berber iken ben babamın beşiğini tıngır mıngır sallar iken bir adam varmış. Bu adam o kadar korkakmış ki ayakyoluna dahi karısı götürürmüş. Bir gün akşam bu adam yine sıkışmış ve karısına yalvarmış yakarmış adamın bu hali kadının canına tak demiş. Nihayet kadın adamı ayakyoluna götürmüş ve adamı içeriye kapatmış, kapıyı da kilitlemiş gitmiş, adam da tabii ayakyolunda kalmış. Adam, yalvarmalarının para etmeyeceğini anlayınca, oradaki bir pencereden dışarıya çıkmayı becermiş. Fakat eve gidemeyeceği için başka bir yere gitmiş. Az gitmiş, uz gitmiş, dere tepe düz gitmiş, altı ay bir güz gitmiş ve nihayet büyük bir saraya varmış. Sarayın kapısını açıp içeriye girmiş. Bir de ne görsün? Büyük bir oda, ortada kırk tane kazan kaynıyor ve etrafında da kırk tane dev sohbet ediyor. Bunun geldiğini gören devler hayret etmişler ve devlerin en büyüğü, herkes bizim izimizi, tozumuzu görünce kaçar. Sen nasıl korkmadan bizim evimize girebildin, demiş. Adam da demiş ki: Hay yavrularım senelerdir sizi arıyorum ve nihayet çok şükür bulabildim. Çünkü ben sizin dedenizim, siz bu halime bakmayın, artık ihtiyarladım. Geçmiş, baş köşeye oturmuş. Devler de inanarak dedelerine hoş geldin demişler. Adam artık orada yerleşmiş kalmış. Bir gün yatmaya gittiğinde devler toplanarak dedemiz artık gitmiyecek gelin biz gece yarısı gidip onu baltalarımızla öldürelim, demişler. Bunu da bizimki duymuş ve onların haberi yokken yatağının içine koca bir kütük koymuş, başlığını da kütüğe giydirmiş ve kendisi de yüklüğün içine saklanmış. Gece yarısı olmuş, devler gelmişler, karanlıkta kütüğe dedelerine vuruyoruz zannıyla vurmaya başlamışlar ve iyice yorulunca artık ölmüştür diye odalarına çekilmişler. Onlar gidince adam hemen yerinden çıkmış, odun gamgalarını, bütün küllükleri toplamış ve dışarıya bir yere atmış, sonra gelmiş yerine yatmış. Sabah da her zamanki gibi kalkmış ve bu gece beni pireler de bir türlü uyutmadı, demiş. Devler onun bu sözlerini duyup ölmediğini görünce, müthiş korkmaya başlamışlar. Yine bir gün yatmaya gidince devler toplanmışlar. “Yarın bir yarış tertip edelim, bu bir yürüme yarışı olsun, kim yürürken daha çok toz çıkarırsa ona bir çuval altın verelim. Eğer dedemiz kazanmazsa buradan gitsin” demişler. Bunu da duymuş ve onlar görmeden, giyeceği kendi çizmelerine toz doldurmuş. Ertesi gün devlerin en büyüğü dedelerine yarış yapılacağını söylemiş ve yarış başlamış. Devler hem hızlı yürüyor hem de toz çıkarıyorlarmış, dedeleri ise çizmelerine toz doldurduğu için onlardan daha çok toz çıkarıyormuş. Bunun üzerine “Oğullarım gördünüz mü ben ihtiyarım ama sizden daha kuvvetliyim demiş. Yarışı da kazanmış. Devler demiş ki: Dede yarışı kazandın, sana bir çuval altını verelim, sen de buradan git. O da, yok yavrularım, ben sizi zor güç buldum, artık bir daha bırakmam demiş.",
+      "Devler dedelerinden kurtulabilmek için bir çare düşünmüşler. Bu da şuymuş: Ertesi gün bir yarış daha yapacaklarmış, bu yarışta kim taşı sıkıp un yapabilirse ona bir çuval altın verilecekmiş, dedeleri bunu da konuşurlarken duymuş ve gizlice mutfaktan bir peynir bulmuş ve cebine saklamış. Ertesi gün buna yarışı söylemişler ve yarış başlamış. Dedeleri kendine iki yassı taş bulmuş ve kimse görmeden peyniri de arasına koymuş ve bakın evlâtlarım, taşı un etmek değil, taşın suyunu bile çıkarıyorum demiş. Tabii bu yarışı da kazanmış. Devler buna demişler ki, “Geçen seferki altınlarını da verelim şimdikini de verelim. İki çuval altının olur, seni de altınlarını da evine kadar dalımızda götürelim. Biraz nazlanmış, fakat sonra razı olmuş. Devler de bunu altınlarıyla birlikte dallarında evine götürmüşler. Kapısının önüne koyup dönmüşler. Adam evinin kapısını çalmış, kim o diyen karısına ben geldim, demiş. Karısı da mendilini göster, kocam olduğunu bileyim, demiş, Bu da göstermiş, karısı kocasının geldiğini anlayıp içeriye almış, adam altınları da içeriye getirmiş ve karısına “Sen beni ayakyoluna kapatmasaydım, bunları bulamayacaktık” demiş ve başından geçenleri anlatmış, yemiş içmiş muratlarına ermişler."
+    ],
+    "textStatus": "complete"
+  },
+  {
+    "id": "nardaniye",
+    "title": "Nardaniye Hanım",
+    "theme": "Umut & dayanışma",
+    "motif": "Ay ışığında",
+    "intro": "Evinden uzak düşen Nardaniye, ummadığı bir yerde kendine bir aile bulur.",
+    "source": "https://www.okuryazar.com.tr/dergi/nardaniye-hanim",
+    "sourceName": "Okuryazar · Nardaniye Hanım",
+    "sourceNote": "M. Öcal Oğuz (der.), Hikayeler ve Masallar, Kültür Bakanlığı Yay.",
+    "paragraphs": [
+      "Bir varmış, bir yokmuş. Evvel zaman içinde, kalbur saman içinde… Bir adamcağız varmış. Bunun bir tane, on iki on üç yaşlarında, kıymetli bir kızı varmış. Kızın anası ölmüş. Babası “Kimi alayım, kimi alayım?”diye düşünür dururmuş. Kızın hocası:",
+      "“Kızım babana söyle beni alsın, Ben sana şöyle bakarım, böyle bakarım…” demiş. Kız da gelmiş eve:",
+      "“Baba, alacaksan benim hocamı al. Başkasını istemem,” demiş.",
+      "Adam, “Peki,”der. Bu kadını alır.",
+      "Aradan bir zaman geçer, kadın başlar üvey kızını kıskanmaya. Ne yapsam da bu kızdan kurtulsam? diye düşünürmüş. Bir gün, bir bayram günü imiş, herkes gezmeye gidiyormuş. Kadın kocasına yalvarır:",
+      "“Bu da kızdır, gençtir; varsın gitsin, bir an eğlensin,”der. Adam da razı olur. Kadın bunun üzerine:",
+      "“Kızım, der, sen git, ben yemeğini arkandan getiririm.”",
+      "Kız gider, kırlarda arkadaşlarıyla güler, oynar… Artık iyice karnı acıkmış, annesi görünmüyor… Neyse, epey bir zaman sonra kadın gelir. Meğer, evde zehir gibi tuzlu bir boğaça yapmış. Bir testiye de su doldurmuş, içine bir yılan yavrusu koymuş… Kız boğaçayı yer. Az sonra susar. Diker testiyi, buz gibi suyu kana kana içer, yılanı da yutar, haberi yok kızcağızın…",
+      "Kızın hali değişir, gün günden karnı şişer. Kadın ebelere gösterir. Kocasına der ki bir gün:",
+      "“Ah, yahu, o gün ben senin sözünü dinlemedim, kızı kıra gezmeye gönderdim. Herhalde birine kanmış, gebe kalmış …”",
+      "Adam da pek namuslu imiş. Bu iş pek gücüne gider. Kızını da çok severmiş. Gece uykuları kaçar. Kızını yüzlemeye, dövüp sövmeye de kıyamazmış. Bir gün, artık dayanamamış, kızına:",
+      "“Haydi, seni gezmeye götüreyim,”der. Bir dağın tepesine çıkarır. Orda bir ağacın altına otururlar.",
+      "“Kızım, yoruldun yat dizime de sana ninni söyleyeyim, uyu,”der.",
+      "Kız yatar babasının dizine. Babası ninni söylerken, söylerken, uyur. Adam o zaman bir kamışın içine bir arı koyar, kızın başucuna asar, bırakır gider. Arı kamış içinde vızıldadıkça kız da babası ninni söylüyor sanırmış… Nihayet uykusunu iyice alır, uyanır, bir de bakar ki, bir arı başucunda vızıldıyor, babası gitmiş… Başlamış ağlamaya:",
+      "“Ah benim halim ne olacak?” diye dövünür, karnı da büyümüş, içi lombur lombur edermiş. “Bütün bunlar üvey anamın tuzağı…” der kızcağız, ne edeceğine şaşırmış, başlar dağdan aşağı inmeye… Bir dere kenarına varır. Şurada bir abdest alayım, Allah'a sığınayım. Bakalım Allah ne gösterir,” der. Dereye gelmeye… Derenin içinden de başka bir ses buna cevap vermiş… Bir de ne görsün, ağzından kağış kağış, bir yılanla yavruları çıkmasın mı?",
+      "Kızcağız hafifler, ferahlar. Ama dağ başında, yapayalnız kalmış… Kalbi mahzun, düşüne düşüne bir yol tutturur, gider gider…",
+      "Ortalık kararmaya başlamış… Uzaktan bir ışık görür: “Şuraya gideyim, belki beni alırlar,” der. Varır o ışığın olduğu eve, kapıyı çalar. Açarlar. Meğer orası Kırk-Haramiler'in evi imiş. Bunu gören Haramiler:",
+      "“Kız senin burada işin ne? Derler. Kız da başından geçenleri anlatır.",
+      "“Ah, der, beni babam böyle böyle, dağda bıraktı. Allah rızası için, alın beni içeri, size sığındım, bu gece misafir edin.”",
+      "Kırk Haramiler bakarlar ki, dünya güzeli gibi bir kız, yüzüne bakmaya kıyılmaz… Kıza derler ki:",
+      "“Sen şurada otur, biz bir düşünelim.”",
+      "Kırkı da bir odaya girerler, başlarlar müzakereye.",
+      "“Birimiz alsak, birimiz ister; birimiz alsak birimiz ister… Bize sığınmış namuslu bir kız, başka türlü de edemeyiz. En iyisi bunu kırkımız kardeş edinelim,” derler. Gelirler:",
+      "“Kız, derler, sen bizim dünya ahiret kardeşimiz ol. Biz getirelim sen pişir. Otur, keyfine bak…”",
+      "“Peki,” der kız da. Artık bunlar kardeşlerini öyle severler, öyle severlermiş ki, dünyada, üstüne toz konduramazlarmış. O da onları severmiş…",
+      "Kırk-Haramilerin evinde oturmakta olsun… Biz gelelim analığa…",
+      "Ay doğmuş, ayın on beşi… Kadın çıkmış ayın karşısına…",
+      "“Ayım, ayım,",
+      "Sen mi güzel ben mi güzel?",
+      "Ay da derki oradan:",
+      "“Ne sen güzel, ne ben güzel,",
+      "İlle Nardaniye Hanım güzel.",
+      "(Kızın adı Nardaniye Hanım imiş…) Bunu duyan kadın.",
+      "“Eyvah, der, kaltak ölmemiş. Bu iş gizli kalmaz, meydana çıkar. Şimdi ben ne yapayım?",
+      "Hemen kocasına gider. “Aman kocacığım, der, yavrucağızı nerelere bırakmıştın?",
+      "Rüyama girdi… Aç mıdır, susuz mudur? Gideyim arayayım.”",
+      "Adamcağızın da o gün, bugün, iki gözü iki çeşme, kızının derdinden erimiş bitmiş, dünyadan elini eteğini çekmiş… Karısının bu düşüncesine içinden sevinir. Gider kadına bıraktığı dağı gösterir.",
+      "Kadın bir sepet kiraz alır, hepsini zehirler. Takar koluna sepeti. Kocasının gösterdiği yerden aşağıya doğru yürür. Gider, gider, uzakta bir ev görür. “Mutlaka buraya sığınmıştır,” der. Ama kendisini bir başka kıyafete sokmuş: Bir ferace giymiş, bir gözü açık öteki örtülü… Yürür eve doğru… Kız da işini bitirmiş, gelir, Kiraz satıyorum, kiraz… “ diye kapının önüne. Kız da:",
+      "“Kiraz alayım da, pencerenin önünde oturayım,” der.",
+      "Hemen çıkar, yarım okka kiraz alır… Oturur pencerenin önüne, kirazlarını yiyecek… Penceresinin yukarısında da kırk tane kuş varmış, kafeste, onlarla eğlenirmiş. Kuşlar başlar: “Cik cik, cik cik cik…” diye kiraz istemeye. Bir tane ona vereyim, bir tane ona derken sepette kiraz biter. Kıza bir tane bile kalmamış. Kız bir de bakar ki, kirazı yiyen kuş ölüyor, yiyen ölüyor… Oturur pencerenin önüne, iki gözü iki çeşme ağlar, kızcağız. Kuşlarını pek severmiş… Akşam olur, kardeşleri gelir.",
+      "“Ne ağlıyorsun kardeş,” derler.",
+      "“Ah, kuşlarım öldü… Kirazcı geçiyordu, kapıdan aldım, kuşlara verdim. Hepsi öldü.”",
+      "Kırk-Haramiler",
+      "“Sen sağ ol, kardeş, biz sana daha güzellerini getiririz, derler. Sakın bir daha kapıdan geçen bir şeyden alma… Ya sen ölseydin?”",
+      "Ertesi gün evvelkilerden güzel kırk tane kuş getirirler, kafeslere koyarlar.",
+      "Ardından bir ay geçer, yeni ay doğar. Analık çıkar ayın karşısına: “Ayım, ayım,",
+      "Sen mi güzel, ben mi güzel? Der.",
+      "Ay da:",
+      "“Ne sen güzel, ne ben güzel,",
+      "İlle de Nardaniye Hanım güzel,” diye cevap verir.",
+      "“Ah, kaltak kız, ölmemiş…” diye, bu sefer gider kadın, bir kâğıt sakız alır. Sakızı zehirler. Gene varır Haramilerin evinin önüne: “Sakız satarım, sakız satarım…” diye geçmeye. Kız kendi kendine: “Bu yenecek şey değil ya… Alayım…” der, alır kadından sakızı, kuşlar gene başlar ötüşmeye: “Cik, cik, cik, bana, bana…” diye. Kız der ki:",
+      "“Durun, çiğneyeyim de öyle vereyim.”",
+      "Sakızı atar ağzına, bir iki çiğnerken, düşer serilir olduğu yere.",
+      "Akşam olur, kardeşleri gelir bakarlar ki, kız serili yatıyor.",
+      "“Eyvah, kardeşimiz ölmüş. Biz nasıl dayanalım bunun acısına. Nasıl gömelim topraklara?” diye ağlaşırlar. Bir tabut yaptırırlar. İçine kızı koyarlar. Artık nereye giderlerse, bu tabutu taşırlarmış.",
+      "Bir gün bunlara bir padişahın oğlu rastgelmiş… Der ki şehzade:",
+      "“Sormak ayıp olmasın ya, ben size kaç kere rastladıysam hep bir tabutla gördüm. Bunu neden böyle taşırsınız?”",
+      "“Ah, sorma, derler Kırk-Haramiler, biz kırk tane kardeşiz, bir tek bacımız vardı. O bacımız öldü. Kıyamıyoruz toprağa gömmeye. Böyle taşıyoruz.”",
+      "Bunun üzerine Şehzade der ki:",
+      "“Bana verir misiniz bu tabutu?”",
+      "“Veririz ama gömersin.”",
+      "Şehzade:",
+      "“Namusumun üzerine söz veriyorum ki gömmem. Ölünceye kadar kendi odamda saklarım,” der. Kırk-Haramiler tabutu verirler.",
+      "Şehzade alır bu emaneti, odasına koyar. Ama merak da eder. Bir de açar bakar ki, ne görsün, ne görsün, dünya güzeli bir kız. Mum gibi sararmış, güzelliğinden zerre kaybetmemiş. Oğlan deli olur. Kızı kaldırır, köşeye oturtur. O günden sonra, kapıyı kilitler; kimseyi içeri koymazmış. Akşamüstü odasına güle güle güle girermiş, sabahleyin ağlaya ağlaya çıkarmış. Bir lalası varmış oğlanın, dikkat eder, bu oğlan gün günden sararıyor, yemiyor, içmiyor. Merak eder. Çilingirden bir anahtar uydurur kapıya. Bir gün girer içeri. Bakar ki ayın on dördü gibi bir kız, sapsarı, cansız yatıyor. Ama ölüye benzemiyor. İhtiyar adam, tecrübeli ne olsa, anlar ki bu sağdır. Orasını eller, burasını eller. Bir de bakar ki avurdunda sert bir şey. Sokar parmağını, çıkarır, bir sakız. O saat kız: “ Hapişuuuu, hapişuuuu…”diye aksıraraktan uyanır, gözlerini açar, bakar ki başucunda yabancı birisi.",
+      "“Aman, burası neresi? Kardeşlerim nerede? Kuşlarım nerede? … “ diye başlar ağlamaya…",
+      "Hemen lala koşar Beyin oğluna:",
+      "“Müjde, müjde, Şehzadem, der, senin hastan dirildi.”",
+      "Şehzade gelir bakar, kız sahiden de dirilmiş ağlıyor… Artık sevincinden çılgına döner.",
+      "Hemen Kırk- Haramilere haber gönderir. Onlar da gelirler, sevinirler, bayram ederler.",
+      "Sonra, beyoğlu ile Nardaniye Hanım kırk gün kırk gece düğün yapıp evlenirler. Beyin oğlu kızın başından geçenleri dinler. Babasını getirtir. Adamcağız, kederinden bir kara top olmuş… Beyoğlu sorar:",
+      "“Derdin nedir, babacığım?”",
+      "“Ah, der adam, derdimi nasıl anlatayım, çaresiz dert…”",
+      "Kızını dağ başına bıraktığını anlatır.",
+      "“Niçin yaptın bu işi?” derler. O da:",
+      "“Böyle böyle, kızım gezmeye gitmişti… Bir kaza gelmiş başına, namusuma yediremedim,” der.",
+      "Kızı çağırırlar. Baba kız birbirlerinin boynuna atılırlar… Kız başından geçenleri bir bir anlatır. Hemen giderler, analığı getirirler. Beyin önüne. Ona derler ki:",
+      "“Kırk satır mı istersin, kırk katır mı?” Kadın da:",
+      "“Kırk satır düşman başına, der. Kırk katır verin de sılama gideyim.”",
+      "O zaman, kadını kırk katırın kuyruğuna bağlarlar, kırkına bir kamçı vururlar. Üvey ana da yaptıklarının cezasını bulur… Onlar ermiş muradına, bizde erelim muradımıza…"
+    ],
+    "textStatus": "complete"
+  },
+  {
+    "id": "uc-turunclar",
+    "title": "Üç Turunçlar",
+    "theme": "Yolculuk & sabır",
+    "motif": "Suyun kıyısında",
+    "intro": "Üç gizemli meyve, uzun bir yolculuk ve zamanında verilen bir yudum su.",
+    "source": "https://bilgebaba.com/uc-turunclar/",
+    "sourceName": "Bilge Baba · Üç Turunçlar",
+    "sourceNote": "Türk Folklor Araştırmaları Dergisi, 1968, sayı: 227, der., Nebahat Çetin.",
+    "paragraphs": [
+      "Varmış, yokmuş Allah'ın kulu çokmuş. Çok söylemesi günah, söyleneni dinlememek çok ayıpmış.",
+      "Vaktin birinde, bir memleketin bir padişahı varmış. Padişahın da bir tanecik oğlu varmış. Günlerden bir gün bu şehzade balkona çıkmış. Balkondan şehrin orta yerindeki pınar görünürmüş. Şehzade balkondan pınara gelip su dolduran kadınları gözlemiş. Bir tane yaşlı kadın da su doldurmaya gelmiş. Şehzade bir taş alıp atmış. Yaşlı kadının testisini kırmış. Yaşlı kadın şehzadeye dönmüş:",
+      "“Sana bir şey demem oğul. Sen olasın üç turunçların aşkına düşesin. Sararıp solasın,” demiş ve gitmiş, Şehzadeyi o günden sonra bir ateştir almış. Üç turunçlar demiş de başka bir şey dememiş. Padişah oğlunun haline üzülmüş. Sultan Hanım oğluna:",
+      "“Oğlum, bir tanecik oğlum, niye bu hallere düştün. Sana memleketimizin en güzel kızını alalım, “demiş. Şehzade:",
+      "“Anam” demiş, “anam ben istemem, dünya güzelini getirseniz bile üç turunçları arayıp bulacağım. Ya bulup getireceğim, ya bu yolda öleceğim,” demiş. Heybesini doldurmuş. Atını eyerlemiş. Demir çarık, demir âsa düşmüş yollara.",
+      "Az gitmiş, uz gitmiş. Dağlar aşmış. Düzler geçmiş. Gide gide bir ormana varmış, bakmış ormanda bir in. İnde iki tane aslan yavrusu.. Büyük bir yılan da yavruları yemek için hücum ediyormuş. Yılanı öldürmüş. Yavruları kurtarmış. Bakmış ana aslan topallıya topallıya geliyor. Ana aslan gelince yavrularını bu adam öldürdü sanmış. Parçalayacakken, yavruları yılanı göstermişler. Ana aslan her şeyi anlamış. Şehzadeyi çağırmış. Şehzade aslanın yanına yaklaşınca bakmış sağ ön ayağı şişmiş. İltihap dolmuş. Şehzade:",
+      "“Aslan ana” demiş. “O ayağına ne oldu ki, ver bakayım ne varsa çıkarayım. Belki iyileştiririm.” Ana aslan ön sağ ayağını uzatmış. Şehzade ayağa bakmış ki koca bir diken var. Dikeni çekip çıkarmış. Yaraya eliyle basmış. İçindeki iltihapla pis kanı temizlemiş. Yarayı silmiş, güzelce. Aslan rahatlamış ayağındaki yara temizlenince. Şehzadeye dönmüş:",
+      "“İnsanoğlu” demiş, “bana bugün iki büyük iyilik ettin. Birinci yavrularımı kurtarıp bana bağışladın. Sonra beni acıdan kıvrandıran ayağımdaki yarayı temizleyip iyileştirdin. Sana nasıl yardım edeyim?” diye sormuş. Şehzade:",
+      "“Aslan ana, benim yaptığımda ne var ki, herkes o şekilde hareket ederdi. Bana yardım etmene gelince, hiç sanmıyorum. Çünkü ben yıllardır üç turunçları arıyorum. Aradığım halde ne yerini buldum, ne yerini bilene rastladım,” demiş.",
+      "Aslan ana sevinçle:",
+      "“İnsanoğlu sana umduğundan çok yardım edeceğim. Çünkü yerini biliyorum üç turunçların,” demiş. Şehzade heyecanla:",
+      "“Söyle ana söyle ana,” demiş. Aslan ananın boynuna sarılmış. Aslan ana:",
+      "“Şimdi bu dağı aşacaksın bunun arkasında bundan daha yüce bir dağ var onu da aşacaksın. Onun arkasındaki daha da yüce. İşte o dağın tepesine çık. Tepede büyük bir devin büyük bir kalesi var. Kalenin bir kapısı açık, biri kapalı, Bir kapıda bir köpek bağlı, birinde koyun. Koyunun önünde et var, köpeğin önünde de ot. Kale kapısına gelince koyunun önündeki eti köpeğe ver, köpeğin önündeki otu da koyuna. Kalenin açık kapısını kapat, kapalı kapısını aç ve içeri gir. Yolun her tarafı böğürtlenlerle dolu. Böğürtlenlerin dikenleri yoluna devam ettirmeyecekler seni. Sen böğürtlenleri elinle okşa ve “Oh! Ne güzel güllermiş” de, böğürtlenler sana yol verecekler, bir ağacın altında bir dev göreceksin. Devin gözleri yumuksa, bil ki uyanık, sesini çıkarma, gözleri açıksa da dev uyumuştur. Ağacın başında üç tane turunç var. Yerden bir taş al, Bismillah, de taşı at. Üç seferde düşüremezsen taş kesileceksin. Oradan çıkarken de sakın arkana bakma. Turunçları da su kenarında kes,” demiş. Şehzade helâlaşıp yola koyulmuş.",
+      "O dağı aşmış. Ardından ondan daha yüce bir dağı aşmış. Derken üç turunçların bulunduğu hepsinden yüce dağa gelmiş. Dağın tepesine varmış. Bakmış büyük bir kale var. Kalenin iki kapısından biri açık biri kapalı. Kapılardan birinin önünde bir koyun, koyunun önünde de bir parça et duruyormuş. Bir kapının önünde de bir köpek yatıyormuş, köpeğin önünde bir kucak ot varmış. Koyunun önünden eti almış, ite vermiş, itin önündeki otu da koyuna vermiş, Kalenin açık kapısını kapatmış, kapalı kapısını açıp içeriye girmiş. Bakmış her taraf böğürtlen. Bir girmiş böğürtlenlerin içine. Dikenler her yanını kanatmış. Aslanın dediklerini hatırlamış ve böğürtlenleri okşamış.",
+      "“Aman ne güzel güller” demiş. Böğürtlenler Allah'tan açılmışlar yolun iki yanına doğru. Şehzade ilerlemiş. Bakmış bir turunç ağacı, Ağaçta üç tane turunç varmış. Ağacın altında da bir dev uzanmışmış. Devin gözleri açıkmış. Şehzade devin uyuduğunu anlamış. Yerden bir taş almış;",
+      "“Bismillah” deyi atmış turunçlara… Değdirememiş. Bakmış dizlerine kadar taş kesildi. Bir taş daha alıp atmış, yine değdirememiş. Beline kadar taş kesilmiş. Üçüncü taşı da değdiremeyince bakmış tamamen taş kesilecek. Yaradana sığınıp bir taş daha atmış. Turunçlar düşmüş. Turunçları alıp ardına bakmadan koşmaya başlamış. Dev uyanmış ve:",
+      "“Böğürtlenler tutun onu,” demiş.",
+      "Böğürtlenler yolu iyice açıp:",
+      "“Ya! O bizi okşadı, sevdi,”demişler. Dev kalenin kapısına:",
+      "“Demir kapı tut onu,” demiş.",
+      "Kapı:",
+      "“Yooo!” demiş. “Ben yıllarca kapalıydım. O beni açtı” İyicene açılmış. Dev, son ümit köpekle, koyuna seslenmiş:",
+      "“Köpeğim, koyunum” demiş tutun onu, Köpek:",
+      "“Yoo” demiş. O bana et verdi.",
+      "Koyun da:",
+      "“Onu tutmam” demiş. O bana ot verdi.",
+      "Neyse şehzade kaçıp kurtulmuş.",
+      "Yoldan giderken susamış. Sağa bakmış su yok. Sola bakmış su yok. Aklına turunçlar gelmiş. Aslan ana turunçları su başında kes demişti ya, bunu unutmuş meğer. Turunçlardan en büyüğünü çıkarmış, kesip suyunu emecekmiş. Bıçakla turuncu ikiye böler bölmez, turuncun içinden ayın on dördü gibi bir kız çıkmış:",
+      "“Su. Su.” Demiş. Şehzade suyu nereden bulsun. Turunç güzeli ölmüş. Bir müddet daha gitmiş. Yine su bulamamış. Ortanca büyüklükteki turuncu da kesmiş. Bu turunçtan daha da güzel bir kız çıkmış. O da:",
+      "“ Su… Su…” diye can vermiş.",
+      "Şehzade elimde kalan turuncu kesmiyeceğim” demiş. Kendi kendine ve kesmemiş. Az sonra da memleketin topraklarına dâhil olmuş. Bir gölün başına varmış. Orada bir pınardan kana kana su içmiş. Sonra gölün kıyısına oturup turuncu kesmiş. Bu son turunçtan çıkan kız daha da güzelmiş. Ay'a diyormuş, sen doğma ben doğayım, güne diyormuş, sen doğma ben doğayım. Neyse turunçtan kız çıkar çıkmaz:",
+      "“Su. Su.” demiş Şehzade de kızı gölün içine atıvermiş. Kız su içmiş. Elini yüzünü yıkamış ve kenara çıkmış. Şehzadeye:",
+      "“Beni kurtardın. Ablalarım nerde ola ki,” demiş, şehzade üzüntüyle:",
+      "“Onlara su kavuşturamadım öldüler,” demiş.",
+      "Kız:",
+      "“Kader,” demiş. “Biz padişah kızlarıydık, o dev bize büyü yapıp bizi turunç etmişti.",
+      "Şimdi ben ne olacağım?” diye sormuş.",
+      "Şehzade:",
+      "“Sultanım” demiş. Ben senin için dağlar aştım, düzler geçtim. Yıllardır yollardayım. Benimle evlenir misin?”",
+      "Kız:",
+      "“Ne yapalım kader,” demiş. Şehzadeyi de ilk görüşte sevmişmiş zaten.",
+      "Şehzade parmağındaki elmas yüzüğü çıkarmış, turunç güzeline vermiş.",
+      "“Bu yüzüğü parmağına tak. Ben gidip anama, babama haber vereyim, gelip seni buradan düğün alayınan alayım,” demiş.",
+      "Kız.",
+      "“Peki, tez gelin,” demiş.",
+      "Şehzade gidince kız bir ağacın tepesine çıkmış. Kimse görmesin diye. Biraz sonra elinde testisiyle bir Sinsen kızı pınara su almaya gelmiş. Kara kapkaraymış. Çirkin, pis bir kızmış. Göle eğilmiş Sinsen kızı. Suda turunç güzelinin aksini görmüş. Kendi kendine:",
+      "“Ben ne güzelmişim de haberim yokmuş, demiş. Padişaha gelin olacak kadar güzelim” demiş. Elini saçına götürüp düzeltmek istemiş. Bakmış göldeki aksi elini kaldırmıyor. Şaşmış kalmış. Sağa sola bakmış ağacın üstündeki turunç güzelini görmüş. Sinsen kızı:",
+      "“Bacı, bacı” demiş. “Niye öyle ağacın tepesinde oturuyorsun. İn aşağıda iki laf edelim, demiş.",
+      "Turunç güzeli ağaçtan inmiş. Konuşmuşlar biraz. Sinsen kızı bir kurnazlık düşünmüş hemen:",
+      "“Bacı” demiş. “Gel seni yıkayayım. Temiz ol ki padişahın adamları seni daha çok beğensinler.”",
+      "Turunç güzeli de inanmış. Soyunmuş. Sinsen kızı yıkarken turunç güzeli:",
+      "“Aman dikkat et tepemdeki üç gümüş teli koparma, demiş. Sinsen bunu duyunca durur mu: Bir fırsatına getirip gümüş teli koparmış. Turunç güzeli bir beyaz güvercin olmuş.",
+      "“Pırrr… Pırrrr…” diye uçup ağacın dalına konmuş.",
+      "Sinsen kızı turunç güzelinin elbiselerini giymiş. Ağaca çıkıp beklemiş. Padişahın adamları gelmiş. Kızı götürmüşler. Şehzade yalnız kaldıkları vakit:",
+      "“Sen öyle değildin, ne oldu ki böyle karardın,” demiş. Sinsen kızı:",
+      "“Seni beklerken güneşten yandım,” demiş. Beyaz güvercin olan turunç güzeli de pencerenin dibindeki dallardan birine konup:",
+      "Ben bir turunç güzeliydim Sinsen kızı yerimi aldı Rüzgâr esti yel savurdu Şehzademi Sinsen aldı",
+      "Diye ötmüş. Güvercin ötmeye başlayınca Sinsen kızı da kendi dilince türkü söyleyip sesini bastırmaya çalışırmış. Şehzade bu güzel kuşa çok alışmış. Her gün balkona çıkıp bunu dinlemiş. Bir gün güvercini yakalatıp altın bir kafese koymuş, Başucuna asmış. Her gün onu dinlemiş.",
+      "Güvercin bu sefer de:",
+      "Has bahçedir benim yerim Altın kafesi neyleyim Şehzademin yüreği kan ağlar Gücüm yetmez yardım edem.",
+      "Diye ötmüş. Sinsen kızı bakmış kurtuluş yok Yalandan hasta olmuş. İlle de beyaz güvercin eti isterim diye tutturmuş. Şehzade ne yapmış ne etmiş, ne demişse kâr etmemiş. Sinsen kızına çaresiz, beyaz güvercini kestirip etini yedirmişler. Kemiklerini de bahçeye atmışlar. Kemiklerin atıldığı yerde bir kavak ağacı bitmiş. Günden güne büyürmüş. Bir hafta sonra şehzadenin odasının penceresine ulaşmış boyu. Yel estikçe kavak sallanarak",
+      "Ben bir uzun kavağım Camdan şehzademe bakarım. Şehzademi Sinsen aldı",
+      "Yeri göğü tutuyor ahım.",
+      "Deyip, hışır hışır sallanmış. Bu arada Sinsen kızı da iki canlı) olmuş. Ay aydan, gün günden… Derken dokuz ay on gün sonra bir oğlan doğurmuş. Bebeği doğar doğmaz da:",
+      "“ İlle bu kavak kesilip, bebeğime beşik yapılacak” demiş. Çünkü şehzade kavağın nazlı nazlı sallanmasını, yapraklarının sesini çok severmiş. Sinsen kızı da bunun Turunç Güzeli olduğunu anlamışmış.",
+      "Kavağı kesmişler, beşik yapmışlar. Beşik sallandıkça:",
+      "Uyu Sinsen oğlu uyu Anan kazdı bana kuyu Şehzadem bunu duyarsa Anan ölür Sinsen oğlu…",
+      "Diye sallanıyormuş. Sinsen kızı beşiği de atmış. Şehzadenin ise ağzını bıçak açmıyormuş. Bilirmiş, bu işin içinde bir iş olduğunu, Ama çare bulamamış. Padişahı üzüntü almış. Bir tane oğlu hastalanmış diye. Şehzade bir gün sonra yemek de yemez olmuş. “Vay talihsiz başım” deyip dövünüyormuş. Padişahla karısı.",
+      "Onlar dövüne dursun. Hani o şehzadeye:",
+      "“Üç turunçların aşkına düşersin” diyen ihtiyar kadın vardı ya. İşte o bir gün gene su testisini almış. Pınardan su dolduruyormuş. Padişahın sarayının kapısı önünden geçerken yerde güzel bir tahta parçası bulmuş. Bu beşiğin, hani şu Sinsenin parçalatıp attığı beşiği parçasıydı. Almış eve getirmiş. Bıçakla yontup testinin ağzına kapak yapmış. Nene karının iki tane de ineği varmış. Her gün bu ineğini otlatmaya gidermiş. Evden çıkar çıkmaz testinin kapağındaki tahta fırlayıp turunç olup evi barkı süpürmüş. Yemeği hazırladıktan sonra da tahta olup testinin kapağı olurmuş. Gene nene karı şaşıp kalmış. Bir gün bekliyeyim “Bu in mi, cin mi” göreyim, demiş. İneği götürür gibi yapmış kapının anahtar deliğinden gözlemiş, bakmış kapak fırladı ayın on dördü gibi bir kız oldu. Evi sildi, süpürdü, yemeği yaptı. Tam tahta olacağı sırada, nene karı kapıyı açmış. Kızı kolundan tutmuş:",
+      "“Söyle” demiş, “in misin, cin misin?” Kız:",
+      "“Ne inim, ne cinim. Ben de senin gibi bir insan evlâdıyım nenem.” Nene karı:",
+      "“Peki, kimsin, niye tahta oldun,” demiş.",
+      "Kız:",
+      "“Turunç güzeliyim, büyülüyüm. Büyüm bozuldu, daha da tahta olmam. Ne olur, ne olur ben de seninle kalayım, gidecek kimsen yok,” demiş. Nene karı:",
+      "“Kal kızım demiş. Evde işleri gör. Ben de ineğimizi otlatırım. Geçinip gideriz, demiş. Kimseye de söylemem hiç korkma,” demiş. Sonra da onlar geçinip dursunlar.",
+      "Bir gün padişah bakmış oğlu yemiye yemiye ölecek. Bir tellâl çıkarıp bağırtmış. Tellâl: “Herkes bir yemek yapıp, bu yemekten bir tabak veya bir tas getirsin. Belki şehzademiz yer iyileşir,” demiş.",
+      "Herkes yemekler yapmış. Saraya sahan sahan üstüne, kâse kâse üstüne yemek taşınmış. Şehzade yüzüne bile bakmamış, yemeklerin. Turunç güzeli de nene karıya:",
+      "“Nenem” demiş. “Gel biz de bir çorba yapıp götürelim. Belki şehzademiz iyileşir,” demiş. Bir erişte çorbası yapmışlar, bir tasa doldurup nene karıya vermiş. İçine de şehzadenin gölün kıyısında kendisine verdiği elmas yüzüğü atmış yollamış. Nene karıya:",
+      "“Sakın” demiş, sakın bunu kimseye verme. Kendi elinle şehzadeye ver. Yiyinceye kadar da bekle, demiş. Nene karı sarayın kapısına gelmiş. Hizmetkârlar içeri sokmak istememişler. Şehzade gürültüyü duyup “Bırakın gelsin” demiş. Nene karı yukarı çıkmış. Şehzadeye:",
+      "“Oğul” demiş. Bir kaşık da nenenin çorbasından ye. Belki şifa olur, demiş, Yalvarmış. Şehzade nene karıyı kıramamış. Kaşığı daldırıp ağzına götürmüş. Bakmış ağzında sert bir şey var. Çıkarmış ki turunç güzeline verdiği yüzük. Turunç güzelinin sağ olduğuna inanmış. Yüzü gülmüş, nene karıya:",
+      "“Bu çorbayı kim yaptı eline sağlık Çok hoş pişirmiş” demiş. Nene karı:",
+      "“Kızım pişirdi,” demiş. Şehzade belli etmeden:",
+      "“Kızın kaç yaşında kocan ne iş yapıyor, kızının adı ne” diye sormuş. Nene karı ne bilecek. Turunç güzelinin hikâyesini anlatmış. Şehzade hemen Sinsen kızıyla oğlunu bağlatmış. Babasına müjdeciler koşturmuş. Turunç güzelini nene karının evinden alıp gelmişler. Sinsen kızına da",
+      "“Kırk katır mı, kırk satır mı,” demişler.",
+      "Sinsen kızı kırk katır istemiş. Sinsen kızıyla oğlunu katırların kuyruğuna bağlamışlar. Onlar parçalana parçalana ölmüşler.",
+      "Şehzadeyle turunç güzelinin kırk gün, kırk gece düğünleri olmuş, onlar ermiş muradına. Al şeftali ver şeftali çekirdeği Güleri'nin gözünden dışarı."
+    ],
+    "textStatus": "complete"
+  },
+  {
+    "id": "ali-cengiz",
+    "title": "Ali Cengiz Oyunu",
+    "theme": "Beceri & özgürlük",
+    "motif": "Bir avuç darı",
+    "intro": "Bir çırak, öğrendiği dönüşüm sanatını özgürlüğünü kazanmak için kullanır.",
+    "source": "https://bilgebaba.com/alicengiz-oyunu",
+    "sourceName": "Bilge Baba · Alicengiz Oyunu",
+    "sourceNote": "Türk Folklor Araştırmaları Dergisi, 1953, sayı: 46, der., Selâmi Münir Yurdatap.",
+    "paragraphs": [
+      "Bir varmış, bir yokmuş evvel zamanda, güngörmüş, bir kadının gayet yakışıklı, boylu poslu, bir delikanlı evlâdı varmış. Onu kadıncağız saraya hükümdar maiyetine vermiş.",
+      "Günün birinde hükümdar, maiyetinin arasında dolaşırken hepsine sordu:",
+      "“İçinizde Ali Cengiz oyununu bilen var mı?”",
+      "Hepsi sustular, cevap vermediler. Yalnız içlerinden o delikanlı karşılık verdi:",
+      "“Emirimiz, eğer müsaade verirseniz, ben gidip Ali Cengiz'i bulayım ondan ders alayım, geleyim.”",
+      "Hükümdar, delikanlının bu cesaret ve atılganlığını takdir ederek, o saat ona müsaade verdi.",
+      "Delikanlı, oradan kalktı, doğru Ali Cengiz' in evine yollandı.",
+      "Yolda giderken bir seyyaha rast geldi. Seyyah ona sordu:",
+      "“Nereye gidiyorsun evlâdım?”",
+      "Delikanlı şu cevabı verdi:",
+      "“ Ali Cengiz'den oyununu öğrenmeye gidiyorum.”",
+      "Seyyah delikanlının koluna girerek dedi ki:",
+      "“Gel evlâdım! Ben sana onu öğreteyim.”",
+      "Biraz sonra seyyahla delikanlı dağlara düştüler. Gide gide seyyahın oturduğu esrarengiz bir mağaraya geldiler. İçeri girip oturdular. Bir aralık seyyah dışarı çıktı. Yalnız kalan delikanlı, gayet geniş olan mağarada dolaşmaya başladı. Orada bir oda buldu. Kapıdan bakınca ayın on dördü gibi güzel bir kızın gözü iki çeşme ağlayarak nakış işlediğini gördü. Selâm vererek odaya girdi. Kıza sordu:",
+      "“İn misin, cin misin?”",
+      "Kız cevap verdi:",
+      "“Ne inim, ne de cinim, sizin gibi bir insanım.”",
+      "Delikanlının hayretini mucip oldu, kıza sordu:",
+      "“Peki, siz buraya nasıl geldiniz?”",
+      "“Efendim, beni vaktiyle annem mektebe yollamıştı. Yolda bu seyyaha rast geldim. Beni alıp buraya getirdi. Okutmaya başladı. Fakat ben onun, okurken söylediklerini ve bütün marifetlerini öğrendiğim için beni bu odada hapsetti.”",
+      "Kız bunu dedikten sonra delikanlıya korkunç bir kuyu gösterdi. Bunun içi hep insan ölüleri ile dolu idi. Oğlan bunu görünce aklı başından gitti. Bayılmak derecesine geldi.",
+      "Sonra, oğlanı teskin ederek nasihat etmeye başladı:",
+      "“Yiğidim, bu seyyah seni doğru olarak okutacak; fakat sen sakın öyle okuma, hep tersine oku, bu sözlerimi hatırından çıkarma.”",
+      "“Bu adam Ali Cengiz'dir.”",
+      "Oğlan, bu nasihati dinledikten sona kıza teşekkür ederek, eski yerine gelip oturdu. Biraz sonra seyyah geldi. Delikanlıya dedi ki:",
+      "“Haydi, gel oğlum! Seni okutmaya başlayayım.”",
+      "Delikanlı “Peki efendim, hazırım” diyerek seyyahın önüne oturdu, seyyah, kitabı açarak delikanlıyı okutmaya başladı. Fakat oğlan kızın dediği gibi yapmaya, yani seyyah, tekne dediği zaman direk, direk dediğinde o tekne deyip, her şeyi ters söylüyordu.",
+      "Seyyah, delikanlıya (Ali Cengiz) kitabını okuttu. Delikanlı (Ali Cengiz) oyununu en ince noktasına kadar öğrendi. Fakat delikanlı her bellediğini yalan yanlış okumaya başladı, öyle ki, seyyah ona kızarak:",
+      "“Sen ne akılsız adamsın! Hiç okuduğun şeyin ezberleyemiyorsun!” diyerek, ona mükemmel bir dayak atıktan sonra dağ başına alıp götürdü, orda bıraktı.",
+      "Oradan seyyah savuşunca, delikanlı hemen başını alıp yürüye yürüye annesinin evine geldi. Onu çoktan beri görmeyen kadın öyle sevindi ki, hemen çocuğuna sarılarak ağlamaya başladı.",
+      "Ertesi gün delikanlı annesine:",
+      "“Valideciğim! Yarın ben at olacağım. Hemen beni saraya götür sat, fakat sakın yolda giderken dizginimi kimseye verme,” dedi.",
+      "Ertesi gün kadın baktı ki, hakikaten oğlu güzel bir at olmuş, hemen onu aldığı gibi doğru saraya götürüp iyi bir fiyatla sattı.",
+      "Gece olunca, kadının kapısı çalındı. Açınca karşısına oğlu çıkmasın mı, hayretler içinde kaldı, onu eve aldı. Beraber yemek yedikten sonra, delikanlı annesine dedi ki:",
+      "“Anneciğim! Yarın ben bir koç olacağım. Beni saraya götür, hükümdara satıver.”",
+      "Sabah olunca, delikanlı seyyahtan öğrendiği hüneri sayesinde kendisini birkaç dakika içinde koç yaptı. Annesi de onu saraya götürdü, yolda giderken seyyaha rastladı. Koçu görünce tanıdı, kendi kendine;",
+      "“ Vay kâfir enciği çocuk vay, dedi, demek Ali Cengiz oyununu öğrendi.”",
+      "Sonra kendisini ateş yaparak kadının yolunu kesti, Fakat kurnaz ve hünerli delikanlı, derhal kuş olup uçtu. Bunu gören seyyah bir güvercin olarak onu arkasından kovalamaya başladı.",
+      "Bu esnada bu manzaraya alık alık hayretle bakan kadın buna şaşıp kaldı.",
+      "Kuş olan delikanlı, güvercini görünce hemen saraya giderek, elma olup hükümdarın kucağına düştü…",
+      "Seyyah hemen eski haline dönüp hükümdarın karşısına çıkarak, kucağındaki elmayı gösterip dedi ki:",
+      "“Bu elma benimdir.”",
+      "Hükümdar şaşkınlıkla cevap verdi:",
+      "“Nasıl olur… Fakat istersen senin olsun.”",
+      "Seyyah tam elmayı almaya hazırlanırken elma darı tanesi olup yere saçıldı. Bunu gören seyyah hemen tavuk olup, darıyı yemek için gagasını uzattı. O sırada, darı sansar olup, süratle tavuğun üstüne sıçrayarak tavuğu boğdu, kanını emdi.",
+      "Sonra silkinip eskisi gibi delikanlı oldu.",
+      "Bunu gören hükümdar, hayretler içinde kalarak:",
+      "“Vay sen misin evlâdım?”, dedi.",
+      "Delikanlı:",
+      "“Evet Emirim!” dedi. “İşte buna Ali Cengiz oyunu derler. O seyyah benim ustam idi. Beni kıskandı, öldürmeye kalkıştı. Ben ondan üstün çıkarak gördüğünüz gibi onu helâk ettim.”",
+      "Hükümdar bundan fevkalâde memnun olarak onu azat etti. Eline yüz bin akçe verdi. Delikanlı da bunları alınca hemen mağarada bıraktığı kızı kurtardı. Büyük bir konak satın alarak mükellef bir düğün yaptı. Yiyip içerek muratlarına nail oldular. Onlar ermiş muradına biz çıkalım kerevetine…"
+    ],
+    "textStatus": "complete"
+  },
+  {
+    "id": "altin-bulbul",
+    "title": "Keloğlan ve Altın Bülbül",
+    "theme": "Azim & doğruluk",
+    "motif": "Sessiz bir kafes",
+    "intro": "Herkesin aradığı kuş, yalnızca gerçek yolcuyu görünce şakır.",
+    "source": "https://www.kulturportali.gov.tr/portal/keloglanvealtinbulbulmasali",
+    "sourceName": "Kültür Portalı · Keloğlan ve Altın Bülbül",
+    "sourceNote": "Türk Folklor Araştırmaları Dergisi, 1969, sayı: 240",
+    "paragraphs": [
+      "Bir varmış, bir yokmuş; evvel zaman içinde kalbur saman içinde, deve tellâl iken, horozlar berber iken; Bir padişah varmış. Bu padişah, her tarafı camdan bir cami yaptırmış.",
+      "Bir Cuma günü namazdan çıkarken, eli yüzü pak aksakallı bir ihtiyar görmüş. İhtiyar padişah’a demiş ki: ",
+      "“Padişahım, eğer Kafdağı’nın ardındaki, “Altın Bülbül’ü getirir camiin bitişiğine koyarsan, eserin tamamlanır” demiş ve gözden kaybolmuş.",
+      "Padişah, günden güne üzülmüş. Bir gün çocuklarına demiş ki:",
+      "“Evlâtlarım: Kafdağı’nın ardındaki, Altın Bülbül’ü nasıl getireceğimi düşünüyorum.” Çocukların hepsi bir ağızdan babalarına, söz vermişler.",
+      "Atlarına binip; yola düşmüşler. Gel zaman, git zaman bir pınarın başına varmışlar. Yemişler, içmişler tekrar yola koyulmuşlar. Giderken önlerine üç yol gözükmüş. Büyük oğlan haykırmış; Ben birinciden gideceğim. Ortancası ben ikinciden gideceğim. Küçük oğlana da bataklık yol düştü, deyip bir birinden ayrılmışlar. Büyük oğlanla, ortancası giderken, yolları birleşmiş ve bir şehre varmışlar. Paraları kalmayınca da biri hancıya biri de lokantacıya çırak olmuşlar. Biz gelelim küçük oğlan’a;",
+      "Küçük oğlan, bin bir zorluk içinde yoluna devam etmiş. ",
+      "Çalı ve çırpılardan geçerken eli yüzü kan içinde kalmış. Nihayet bir pınara varmış. Pınarın başında eli yüzü nurlu, aksakallı bir ihtiyar görmüş. Selamlaşmışlar. Suyunu içtikten sonra nereye gittiğini niçin gittiğini anlatmış. İhtiyar çocuğu yolundan çevirmek istemiş.",
+      "Oğlan:",
+      "“Ben babama söz verdim. Ölmek var, dönmek yok.",
+      "İhtiyar, oğlanın sırtını üç defa sıvazlamış. Çocuk yine ıssız çöllere düşmüş. Açlıktan, susuzluktan bitkin bir hale gelmiş. Yedi canlı devin sarayına varmış. Devi öldürerek saraydaki peri kızı ile tanışmış. Oradan yoluna tekrar devam etmiş. Gide gide sekiz canlı devin sarayına varmış. Bu devi de öldürerek oradaki peri kızı ile tanışmış. Kız onun nereye gittiğini sormuş; o da “Altın Bülbül’e” diye cevap vermiş. Kız, buraya nasıl gidileceğini, dokuz canlı devden nasıl korunacağını anlatmış. Çocuk, tekrar yola koyulmuş ve dokuz canlı devi de haklamış. Fakat devin sarayında hangi odaya dalacağını şaşırmış. Çünkü 99 odası varmış. ",
+      "Sarayda bir kedinin işareti üzerine “Altın Bülbül”ü alarak yola koyulmuş ve önce, rastladığı ihtiyarın yanına gelmiş. Saraydan getirdiği eşyaları ihtiyarın yanına bırakarak, kardeşlerini aramak üzere, yeniden yola devam etmiş. ",
+      "Şehrin birinde kardeşlerini bularak onların her birine birer at almış. İhtiyarın yanına giderek Altın Bülbül’ü almışlar. Eve gelirlerken, ağabeyleri, kıskandıklarından küçük kardeşlerini suya atmışlar. Fakat Altın Bülbül babalarının yanında bir defacık olsun ötmemiş. Suya atılan kardeşleri ölmemiş, sırsıklam gide gide bir çobana rastlamış. Bir altın vererek bir koyun almış. Koyunun işkembesini başına geçirmiş olmuş tam bir “Keloğlan”.",
+      "Gide, gide, bir kasabaya varmış. Bir hancıya çırak olmuş. Han sahibi bir gün öyle hasta olmuş ki. Kasabanın tabipleri hiçbir çare bulamamış. Bir aksakallı ihtiyar, “filan padişahın camiinden bir yudum su getirirsen efendin iyi olur” demiş.",
+      "Küçük oğlan koşarak, o camie varmış. Buradaki Altın Bülbül başlamış, ötmeye. Bu olayı padişaha müjdelemişler. Padişah bütün halkı geçirmiş, ötmemiş Keloğlan gelince yine ötmüş. O zaman başındaki işkembeyi çıkararak, babasına kendisini tanıtmış.",
+      "Ertesi gün, çayıra kırk çadır, kurdurmuş, Altın Bülbülü küçük oğlanın getirdiğini anlamış; diğer oğullarını saraydan kovmuş."
+    ],
+    "textStatus": "complete"
+  }
+];
+
+const settings = {theme: 'sepia', size: 21};
+
+const collection = document.getElementById('collection');
+const reader = document.getElementById('reader');
+
+function applySettings() {
+  document.documentElement.dataset.theme = settings.theme;
+  document.documentElement.style.setProperty('--size', settings.size + 'px');
+  document.querySelectorAll('.tema-dugmesi').forEach(button => {
+    button.setAttribute('aria-pressed', button.dataset.value === settings.theme);
+  });
+  document.getElementById('font-size').textContent = settings.size + ' px';
+  document.getElementById('smaller').disabled = settings.size <= 14;
+  document.getElementById('larger').disabled = settings.size >= 29;
+}
+
+document.querySelectorAll('.tema-dugmesi').forEach(button => {
+  button.addEventListener('click', () => {
+    settings.theme = button.dataset.value;
+    applySettings();
+  });
+});
+
+document.getElementById('smaller').addEventListener('click', () => {
+  settings.size = Math.max(14, settings.size - 2);
+  applySettings();
+});
+
+document.getElementById('larger').addEventListener('click', () => {
+  settings.size = Math.min(29, settings.size + 2);
+  applySettings();
+});
+
+stories.forEach((story, index) => {
+  const number = String(index + 1).padStart(2, '0');
+  document.getElementById('story-grid').innerHTML += `
+    <a class="masal-karti" href="#masal/${story.id}">
+      <span class="kart-numarasi">${number}</span>
+      <div>
+        <span class="kart-temasi">${story.theme}</span>
+        <h3>${story.title}</h3>
+        <p class="kart-aciklamasi">${story.intro}</p>
+        <span class="kart-oku">Masalı oku</span>
+      </div>
+    </a>`;
+});
+
+function showStory(index) {
+  const story = stories[index];
+  const previous = stories[index - 1];
+  const next = stories[index + 1];
+  const total = String(stories.length).padStart(2, '0');
+
+  document.getElementById('story-title').textContent = story.title;
+  document.getElementById('story-theme').textContent = story.theme;
+  document.getElementById('story-intro').textContent = story.intro;
+  document.getElementById('reader-position').textContent =
+    String(index + 1).padStart(2, '0') + ' / ' + total + ' masal';
+  document.getElementById('story-body').innerHTML =
+    story.paragraphs.map(text => `<p>${text}</p>`).join('');
+  document.getElementById('source-note').textContent = story.sourceNote;
+  document.getElementById('source-link').href = story.source;
+  document.getElementById('source-link').textContent = story.sourceName + ' ↗';
+  reader.querySelector('details').open = false;
+
+  let links = '';
+  if (previous) {
+    links += `<a class="onceki" href="#masal/${previous.id}"><small>Önceki masal</small>${previous.title}</a>`;
+  }
+  if (next) {
+    links += `<a class="sonraki" href="#masal/${next.id}"><small>Sonraki masal</small>${next.title} →</a>`;
+  }
+  document.getElementById('reader-nav').innerHTML = links;
+  document.title = story.title + ' · Kayıp Rıhtım';
+}
+
+function route() {
+  const hash = location.hash;
+  const index = stories.findIndex(story => hash === '#masal/' + story.id);
+
+  collection.hidden = index !== -1;
+  reader.hidden = index === -1;
+
+  if (index !== -1) {
+    showStory(index);
+  } else {
+    document.title = 'Kayıp Rıhtım · Türk Masalları';
+  }
+  window.scrollTo({top: 0, behavior: 'instant'});
+}
+
+window.addEventListener('hashchange', route);
+
+applySettings();
+route();
+</script>
+</body>
+</html>
